@@ -1,9 +1,10 @@
 import { Db } from 'mongodb'
 import { Request, Response } from 'express'
 import { log } from 'util'
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const Joi = require('@hapi/joi')
+require('dotenv').config()
 
 /** registers user by email and password */
 export const registerHandler = (database: Db) => async (req: Request, res: Response) => {
@@ -18,7 +19,10 @@ export const registerHandler = (database: Db) => async (req: Request, res: Respo
 
     // VALIADATION
     console.log('validating credentials')
-    const { error } = schema.validate({ email: email, password: password}, {abortEarly: false})
+    const { error } = schema.validate(
+      { email: email, password: password },
+      { abortEarly: false },
+    )
     if (error) {
       console.log(error.details)
 
@@ -50,20 +54,30 @@ export const registerHandler = (database: Db) => async (req: Request, res: Respo
 
     // TODO: hash password
     console.log('hashing password')
-    const salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(10)
     const passwordHash = await bcrypt.hash(password, salt)
 
     // save user to db
     console.log('saving user to database')
+
     await database.collection('users').insertOne({
       email,
       password: passwordHash,
     })
 
+
+    // Find user to assign token
+    console.log('Serching user in DB');
+    const findUserForToken = await database.collection('users').findOne({ email: email })
+
+    // Assing a token to registered User
+    console.log('Assigning a token to User');
+    const token = jwt.sign({ _id: findUserForToken._id }, process.env.SECRET_TOKEN)
+
     // send response
     console.log('sending response')
     return res.status(200).json({
-      token: '',
+      token: token,
     })
   } catch (error) {
     console.error('failed to register user', error)
