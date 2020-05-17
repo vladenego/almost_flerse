@@ -1,8 +1,7 @@
 import { Db } from 'mongodb'
 import { Request, Response } from 'express'
 import { log } from 'util'
-const bcrypt = require('bcrypt')
-// const { registerValidation } = require('./validation.ts')
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
 const Joi = require('@hapi/joi')
 
@@ -19,12 +18,12 @@ export const registerHandler = (database: Db) => async (req: Request, res: Respo
 
     // VALIADATION
     console.log('validating credentials')
-    const { error } = schema.validate({ email: email, password: password })
+    const { error } = schema.validate({ email: email, password: password}, {abortEarly: false})
     if (error) {
-      console.log(error.details[0].message)
+      console.log(error.details)
 
       return res.status(400).json({
-        message: error.details[0].message,
+        message: error.details,
       })
     }
 
@@ -51,7 +50,7 @@ export const registerHandler = (database: Db) => async (req: Request, res: Respo
 
     // TODO: hash password
     console.log('hashing password')
-    const salt = await bcrypt.genSalt(10)
+    const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt)
 
     // save user to db
