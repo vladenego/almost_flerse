@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "name": "@af/server",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "format": "prettier --write './!(node_modules|dist)/**/*.{ts,tsx,js,jsx}'"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "mongodb": "^3.5.7",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.0",
+    "@types/express": "^4.17.6",
+    "@types/mongodb": "^3.5.17",
+    "@types/node": "^14.0.1",
+    "prettier": "^2.0.5",
+    "ts-node": "^8.10.1",
+    "typescript": "^3.9.2"
+  }
+}
