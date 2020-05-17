@@ -1,9 +1,17 @@
 import { Db } from 'mongodb'
 import { Request, Response } from 'express'
+const bcrypt = require('bcrypt');
+const {registerValidation} = require('./validation.ts');
 
 /** registers user by email and password */
 export const registerHandler = (database: Db) => async (req: Request, res: Response) => {
+
+  // Validate data from user
+  const {error} = registerValidation(req.body)
+    if (error) return res.status(400).send(error.details[0].message)
+
   const { email, password } = req.body
+
 
   try {
     // TODO: validate email and password
@@ -29,7 +37,8 @@ export const registerHandler = (database: Db) => async (req: Request, res: Respo
 
     // TODO: hash password
     console.log('hashing password')
-    const passwordHash = password
+    const salt = await bcrypt.genSalt(10)
+    const passwordHash = await bcrypt.hash(password, salt)
 
     // save user to db
     console.log('saving user to database')

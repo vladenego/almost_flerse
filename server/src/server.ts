@@ -32,6 +32,9 @@ export const createServer = async () => {
   server.post('/posts', createPostHandler(database))
   server.get('/posts', listPostsHandler(database))
   server.get('/posts/:postId', getPostHandler(database))
+  server.get('/hi', (req,res) => {
+    res.send('hi')
+  })
 
   return server
 }
