@@ -1,19 +1,33 @@
 import { Db } from 'mongodb'
 import { Request, Response } from 'express'
-const bcrypt = require('bcrypt');
-const {registerValidation} = require('./validation.ts');
+import { log } from 'util'
+const bcrypt = require('bcrypt')
+// const { registerValidation } = require('./validation.ts')
+const jwt = require('jsonwebtoken')
+const Joi = require('@hapi/joi')
 
 /** registers user by email and password */
 export const registerHandler = (database: Db) => async (req: Request, res: Response) => {
-
-  // Validate data from user
-  const {error} = registerValidation(req.body)
-    if (error) return res.status(400).send(error.details[0].message)
-
-  const { email, password } = req.body
-
-
   try {
+    const { email, password } = req.body
+
+    // VALIDATION REQUIREMENTS
+    const schema = Joi.object({
+      email: Joi.string().min(6).required().email(),
+      password: Joi.string().min(6).required(),
+    })
+
+    // VALIADATION
+    console.log('validating credentials')
+    const { error } = schema.validate({ email: email, password: password })
+    if (error) {
+      console.log(error.details[0].message)
+
+      return res.status(400).json({
+        message: error.details[0].message,
+      })
+    }
+
     // TODO: validate email and password
     console.log('validating credentials')
     if (!email.trim() || !password.trim()) {
