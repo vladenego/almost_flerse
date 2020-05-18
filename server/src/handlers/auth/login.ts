@@ -1,28 +1,50 @@
 import { Request, Response } from 'express'
 import { Db } from 'mongodb'
+import { log } from 'util'
+const bcrypt = require('bcryptjs')
+const Joi = require('@hapi/joi')
+const jwt = require('jsonwebtoken')
 
 /** logs in user by email and password, returns auth token */
 export const loginHandler = (database: Db) => async (req: Request, res: Response) => {
   const { email, password } = req.body
 
   try {
-    // validate email and password
-    console.log('validate credentials')
-    if (!email.trim() || !password.trim()) {
-      console.log('invalid credentials')
+    // Validation requirements
+    const schema = Joi.object({
+      email: Joi.string().min(6).required().email(),
+      password: Joi.string().min(6).required(),
+    })
+
+    // Validate email and password
+    console.log('validating credentials')
+    const { error } = schema.validate(
+      { email: email, password: password },
+      { abortEarly: false },
+    )
+    if (error) {
+      console.log(error.details)
 
       return res.status(400).json({
-        message: 'invalid credentials',
+        message: error.details,
       })
     }
 
     // find user in db
     console.log('finding user in db')
     const user = await database.collection('users').findOne({ email })
+    if (!user) {
+      console.log('there is no such user, try to register first')
+
+      return res.status(400).json({
+        message: 'there is no such user, try to register first',
+      })
+    }
 
     // TODO: compare provided password with hashed one
     console.log('comparing passwords')
-    if (user.password !== password) {
+    const comparePassword = await bcrypt.compare(password, user.password)
+    if (!comparePassword) {
       console.log("password doesn't match")
 
       return res.status(400).json({
@@ -32,7 +54,7 @@ export const loginHandler = (database: Db) => async (req: Request, res: Response
 
     // TODO: sign token
     console.log('signing token')
-    const token = ''
+    const token = jwt.sign({ _id: user._id }, '1234')
 
     // send response
     console.log('sending response')

@@ -4,14 +4,13 @@ import { log } from 'util'
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const Joi = require('@hapi/joi')
-require('dotenv').config()
 
 /** registers user by email and password */
 export const registerHandler = (database: Db) => async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body
 
-    // VALIDATION REQUIREMENTS
+    // Validation requirements
     const schema = Joi.object({
       email: Joi.string().min(6).required().email(),
       password: Joi.string().min(6).required(),
@@ -28,16 +27,6 @@ export const registerHandler = (database: Db) => async (req: Request, res: Respo
 
       return res.status(400).json({
         message: error.details,
-      })
-    }
-
-    // TODO: validate email and password
-    console.log('validating credentials')
-    if (!email.trim() || !password.trim()) {
-      console.log('invalid credentials')
-
-      return res.status(400).json({
-        message: 'invalid credentials',
       })
     }
 
@@ -59,20 +48,18 @@ export const registerHandler = (database: Db) => async (req: Request, res: Respo
 
     // save user to db
     console.log('saving user to database')
-
     await database.collection('users').insertOne({
       email,
       password: passwordHash,
     })
 
-
     // Find user to assign token
-    console.log('Serching user in DB');
+    console.log('Serching user in DB')
     const findUserForToken = await database.collection('users').findOne({ email: email })
 
     // Assing a token to registered User
-    console.log('Assigning a token to User');
-    const token = jwt.sign({ _id: findUserForToken._id }, process.env.SECRET_TOKEN)
+    console.log('Assigning a token to User')
+    const token = jwt.sign({ _id: findUserForToken._id }, '1234')
 
     // send response
     console.log('sending response')
