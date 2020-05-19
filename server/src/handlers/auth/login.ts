@@ -43,7 +43,7 @@ export const loginHandler = (database: Db) => async (req: Request, res: Response
 
     // TODO: compare provided password with hashed one
     console.log('comparing passwords')
-    const comparePassword = await bcrypt.compare(password: string, user.password: string)
+    const comparePassword = await bcrypt.compare(password, user.password)
     if (!comparePassword) {
       console.log("password doesn't match")
 
