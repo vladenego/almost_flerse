@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
 import { Db } from 'mongodb'
 import { log } from 'util'
-const bcrypt = require('bcryptjs')
-const Joi = require('@hapi/joi')
-const jwt = require('jsonwebtoken')
+import bcrypt from 'bcryptjs'
+import Joi from '@hapi/joi'
+import jwt from 'jsonwebtoken'
 
 /** logs in user by email and password, returns auth token */
 export const loginHandler = (database: Db) => async (req: Request, res: Response) => {
@@ -43,7 +43,7 @@ export const loginHandler = (database: Db) => async (req: Request, res: Response
 
     // TODO: compare provided password with hashed one
     console.log('comparing passwords')
-    const comparePassword = await bcrypt.compare(password, user.password)
+    const comparePassword = await bcrypt.compare(password: string, user.password: string)
     if (!comparePassword) {
       console.log("password doesn't match")
 

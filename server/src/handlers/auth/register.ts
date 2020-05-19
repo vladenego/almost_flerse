@@ -1,9 +1,9 @@
 import { Db } from 'mongodb'
 import { Request, Response } from 'express'
 import { log } from 'util'
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const Joi = require('@hapi/joi')
+import bcrypt from 'bcrypt'
+import Joi from '@hapi/joi'
+import jwt from 'jsonwebtoken'
 
 /** registers user by email and password */
 export const registerHandler = (database: Db) => async (req: Request, res: Response) => {
@@ -48,18 +48,14 @@ export const registerHandler = (database: Db) => async (req: Request, res: Respo
 
     // save user to db
     console.log('saving user to database')
-    await database.collection('users').insertOne({
+    const userId = await database.collection('users').insertOne({
       email,
       password: passwordHash,
     })
 
-    // Find user to assign token
-    console.log('Serching user in DB')
-    const findUserForToken = await database.collection('users').findOne({ email: email })
-
     // Assing a token to registered User
     console.log('Assigning a token to User')
-    const token = jwt.sign({ _id: findUserForToken._id }, '1234')
+    const token = jwt.sign({ _id: userId.insertedId }, '1234')
 
     // send response
     console.log('sending response')
