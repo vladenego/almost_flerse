@@ -21,23 +21,22 @@ describe('CRUD Posts', () => {
           expect(res.body).toHaveProperty('postID')
         })
     })
-
   })
 
-  // TODO
-  // describe('login', () => {
-  //   it('rejects empty credentials', async () => {
-  //     await request('http://localhost:8080')
-  //       .post('/auth/login')
-  //       .send({
-  //         email: '',
-  //         password: '',
-  //       })
-  //       .expect(400)
-  //       .expect((res) => {
-  //         expect(res.body.message).toEqual('invalid credentials')
-  //       })
-  //   })
+  describe('CRUD posts', () => {
+    it('rejects empty credentials', async () => {
+      await request('http://localhost:8080')
+        .post('/posts/:postId')
+        .send({
+          // _id: req.params.postId,
+          email: '',
+          password: '',
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toHaveProperty('_id')
+        })
+    })
 
   //   it('logs in user and returns token', async () => {
   //     await request('http://localhost:8080')

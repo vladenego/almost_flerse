@@ -18,6 +18,7 @@ export const createPostHandler = (database: Db) => async (
     const createPost = await database.collection('posts').insertOne({
       title,
       description,
+      data: Date.now()
     })
     
     return res.status(200).json({
