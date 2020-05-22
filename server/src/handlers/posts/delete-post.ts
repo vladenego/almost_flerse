@@ -10,18 +10,16 @@ export const deletePostHandler = (database: Db) => async (
   const { postId } = req.params
 
   try {
-    const getPostById = await database
+    const deletePost = await database
       .collection('posts')
-      .findOneAndDelete({ _id: new ObjectId(postId) })
-
-    console.log(getPostById)
+      .deleteOne({ _id: new ObjectId(postId) })
 
     return res.status(200).json({
-      updatedPost: getPostById,
+      message: 'Post was deleted',
     })
   } catch (error) {
-    return res.status(404).json({
-      message: 'not implemented',
+    return res.status(500).json({
+      message: error,
     })
   }
 }

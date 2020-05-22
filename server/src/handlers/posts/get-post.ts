@@ -11,17 +11,16 @@ export const getPostHandler = (database: Db) => async (req: Request, res: Respon
   // TODO:
   // 1. find post by id
   // 2. return post
-  const getPostById = await database.collection('posts').findOne({ '_id': new ObjectId(postId) })
-  
-  console.log(getPostById);
+  const result = await database.collection('posts').findOne({ '_id': new ObjectId(postId) })
+
 
   return res.status(200).json({
-    post: getPostById
+    post: result
   })
     
   } catch (error) {
-    return res.status(404).json({
-      message: 'not implemented',
+    return res.status(500).json({
+      message: console.error,
     })   
   }
 

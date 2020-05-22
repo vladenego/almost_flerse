@@ -10,11 +10,11 @@ export const listPostsHandler = (database: Db) => async (req: Request, res: Resp
 
   try {
 
-    const getAllPosts = await database.collection('posts').find().toArray()
-    console.log( getAllPosts);
+    const posts = await database.collection('posts').find().toArray()
+  
 
     return res.status(200).json({
-      posts: getAllPosts
+      posts: posts
     })
       
   } catch (error) {

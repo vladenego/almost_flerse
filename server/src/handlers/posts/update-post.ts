@@ -10,21 +10,25 @@ export const updatePostHandler = (database: Db) => async (
   const { postId } = req.params
 
   try {
-    const getPostById = await database
-      .collection('posts')
-      .findOneAndReplace(
-        { _id: new ObjectId(postId) },
-        { title: req.body.title, description: req.body.description, date: Date.now() },
-      )
+    const post = await database.collection('posts').findOneAndUpdate(
+      { _id: new ObjectId(postId) },
+      {
+        $set: {
+          title: req.body.title,
+          description: req.body.description,
+          date: Date.now(),
+        },
+      },
+    )
 
-    console.log(getPostById)
+    console.log(post)
 
     return res.status(200).json({
-      updatedPost: getPostById,
+      updatedPost: post,
     })
   } catch (error) {
-    return res.status(404).json({
-      message: 'not implemented',
+    return res.status(500).json({
+      message: error,
     })
   }
 }

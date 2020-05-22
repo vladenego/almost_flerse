@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import { Db } from 'mongodb'
-import { log } from 'util'
 
 /** creates a new post, returns post id */
 export const createPostHandler = (database: Db) => async (
@@ -15,19 +14,18 @@ export const createPostHandler = (database: Db) => async (
 
     const { title, description } = req.body
 
-    const createPost = await database.collection('posts').insertOne({
+    const result = await database.collection('posts').insertOne({
       title,
       description,
-      data: Date.now()
-    })
-    
-    return res.status(200).json({
-      postID: createPost.insertedId
+      data: Date.now(),
     })
 
+    return res.status(200).json({
+      postID: result.insertedId,
+    })
   } catch (error) {
-    return res.status(404).json({
-      message: 'not implemented',
+    return res.status(500).json({
+      message: error,
     })
   }
 }
