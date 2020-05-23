@@ -22,8 +22,7 @@ export const deletePostHandler = (database: Db) => async (
       message: 'Post is not found',
     })
   } catch (error) {
-    return res.status(500).send({
-      error: console.error(error),
-    })
+    console.error(error)
+    return res.status(500).send({})
   }
 }

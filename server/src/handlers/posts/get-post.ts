@@ -18,9 +18,7 @@ export const getPostHandler = (database: Db) => async (req: Request, res: Respon
       post: result,
     })
   } catch (error) {
-    return res.status(500).json({
-      message: 'Internal Server Error',
-      error: error.message,
-    })
+    console.error(error)
+    return res.status(500).send({})
   }
 }

@@ -14,9 +14,7 @@ export const listPostsHandler = (database: Db) => async (req: Request, res: Resp
       posts: posts,
     })
   } catch (error) {
-    return res.status(error).json({
-      message: 'Internal Server Error',
-      error: error.message,
-    })
+    console.error(error)
+    return res.status(500).send({})
   }
 }
