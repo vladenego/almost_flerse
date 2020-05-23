@@ -10,16 +10,20 @@ export const deletePostHandler = (database: Db) => async (
   const { postId } = req.params
 
   try {
-    const deletePost = await database
+    const { deletedCount } = await database
       .collection('posts')
       .deleteOne({ _id: new ObjectId(postId) })
 
-    return res.status(200).json({
-      message: 'Post was deleted',
+    if (deletedCount == 1)
+      return res.status(200).json({
+        message: 'Post was deleted',
+      })
+    return res.status(404).json({
+      message: 'Post is not found',
     })
   } catch (error) {
     return res.status(500).json({
-      message: error,
+      message: 'Internal Server Error',
     })
   }
 }

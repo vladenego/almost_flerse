@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import { Db } from 'mongodb'
-import { log } from 'util'
 import bcrypt from 'bcryptjs'
 import Joi from '@hapi/joi'
 import jwt from 'jsonwebtoken'

@@ -7,11 +7,6 @@ export const createPostHandler = (database: Db) => async (
   res: Response,
 ) => {
   try {
-    // TODO:
-    // 1. create a new post for user
-    // 2. get created post id
-    // 3. return post id
-
     const { title, description } = req.body
 
     const result = await database.collection('posts').insertOne({
@@ -25,7 +20,7 @@ export const createPostHandler = (database: Db) => async (
     })
   } catch (error) {
     return res.status(500).json({
-      message: error,
+      message: 'Internal Server Error',
     })
   }
 }

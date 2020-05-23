@@ -1,6 +1,5 @@
 import { Db } from 'mongodb'
 import { Request, Response } from 'express'
-import { log } from 'util'
 import bcrypt from 'bcryptjs'
 import Joi from '@hapi/joi'
 import jwt from 'jsonwebtoken'
@@ -23,7 +22,7 @@ export const registerHandler = (database: Db) => async (req: Request, res: Respo
       { abortEarly: false },
     )
     if (error) {
-      console.log("validation failed", error.details)
+      console.log('validation failed', error.details)
 
       return res.status(400).json({
         message: error.details,
