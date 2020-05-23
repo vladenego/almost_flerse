@@ -12,14 +12,15 @@ export const createPostHandler = (database: Db) => async (
     const result = await database.collection('posts').insertOne({
       title,
       description,
-      data: Date.now(),
+      date: Date.now(),
     })
 
     return res.status(200).json({
       postID: result.insertedId,
     })
   } catch (error) {
-    console.error(error)
+    console.error('failed to create post', error)
+
     return res.status(500).send({})
   }
 }

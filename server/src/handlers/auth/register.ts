@@ -3,21 +3,16 @@ import { Request, Response } from 'express'
 import bcrypt from 'bcryptjs'
 import Joi from '@hapi/joi'
 import jwt from 'jsonwebtoken'
+import { TCredentials } from '~/types'
+import { authSchema } from '~/schemas'
 
 /** registers user by email and password */
 export const registerHandler = (database: Db) => async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body
+    const { email, password } = req.body as TCredentials
 
-    // Validation requirements
-    const schema = Joi.object({
-      email: Joi.string().min(6).required().email(),
-      password: Joi.string().min(6).required(),
-    })
-
-    // VALIADATION
     console.log('validating credentials')
-    const { error } = schema.validate(
+    const { error } = authSchema.validate(
       { email: email, password: password },
       { abortEarly: false },
     )
@@ -25,11 +20,11 @@ export const registerHandler = (database: Db) => async (req: Request, res: Respo
       console.log('validation failed', error.details)
 
       return res.status(400).json({
-        message: error.details,
+        message: 'bad credentials',
+        details: error.details,
       })
     }
 
-    // check if user with such email already exists
     console.log('checking if user already exists')
     const userExists = await database.collection('users').countDocuments({ email })
     if (userExists != 0) {
@@ -40,23 +35,19 @@ export const registerHandler = (database: Db) => async (req: Request, res: Respo
       })
     }
 
-    // TODO: hash password
     console.log('hashing password')
     const salt = await bcrypt.genSalt(10)
     const passwordHash = await bcrypt.hash(password, salt)
 
-    // save user to db
     console.log('saving user to database')
-    const userId = await database.collection('users').insertOne({
+    const { insertedId } = await database.collection('users').insertOne({
       email,
       password: passwordHash,
     })
 
-    // Assing a token to registered User
-    console.log('Assigning a token to User')
-    const token = jwt.sign({ _id: userId.insertedId }, '1234')
+    console.log('signing token')
+    const token = jwt.sign({ _id: insertedId }, '1234')
 
-    // send response
     console.log('sending response')
     return res.status(200).json({
       token: token,
@@ -64,9 +55,6 @@ export const registerHandler = (database: Db) => async (req: Request, res: Respo
   } catch (error) {
     console.error('failed to register user', error)
 
-    return res.status(500).json({
-      message: 'Internal Server Error',
-      error: error.message,
-    })
+    return res.status(500).json({})
   }
 }

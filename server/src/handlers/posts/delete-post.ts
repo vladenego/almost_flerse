@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
-import { Db } from 'mongodb'
-import { ObjectId } from 'mongodb'
+import { Db, ObjectId } from 'mongodb'
 
 /** finds and returns a post by id */
 export const deletePostHandler = (database: Db) => async (
@@ -14,15 +13,18 @@ export const deletePostHandler = (database: Db) => async (
       .collection('posts')
       .deleteOne({ _id: new ObjectId(postId) })
 
-    if (deletedCount == 1)
+    if (deletedCount === 1) {
       return res.status(200).json({
-        message: 'Post was deleted',
+        message: 'post was deleted',
       })
+    }
+
     return res.status(404).json({
-      message: 'Post is not found',
+      message: 'failed to find post',
     })
   } catch (error) {
-    console.error(error)
+    console.error('failed to delete post', error)
+
     return res.status(500).send({})
   }
 }

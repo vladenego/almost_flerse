@@ -1,5 +1,6 @@
 import request from 'supertest'
-import { createDatabase } from '../src/database'
+import { createDatabase } from '~/database'
+import { TPost } from '~/types'
 
 // drop database and start server before each test run
 beforeAll(async () => {
@@ -7,57 +8,77 @@ beforeAll(async () => {
   await database.dropDatabase()
 })
 
-let postId = ''
-let post = {}
+let context = {
+  post: {
+    title: 'test title',
+    description: 'test description',
+  } as TPost,
 
-describe('Posts', () => {
-  it('Create post', async () => {
+  updatedPost: {
+    title: 'updated test title',
+    description: 'updated test description',
+  } as TPost,
+}
+
+describe('posts', () => {
+  // create post, update context ids
+  it('create post', async () => {
     await request('http://localhost:8080')
       .post('/posts')
-      .send({
-        title: 'test title',
-        description: 'test description',
-      })
+      .send(context.post)
       .expect(200)
       .expect((res) => {
         expect(res.body).toHaveProperty('postID')
-        postId = res.body.postID
-        console.log(postId)
+
+        context.post._id = res.body.postID
+        context.updatedPost._id = res.body.postID
       })
   })
 
-  it('Get post', async () => {
+  // update post
+  it('update post', async () => {
     await request('http://localhost:8080')
-      .get(`/posts/${postId}`)
+      .patch(`/posts/${context.post._id}`)
+      .send(context.updatedPost)
+      .expect(200)
+  })
+
+  // get post, check if updated
+  it('get post', async () => {
+    await request('http://localhost:8080')
+      .get(`/posts/${context.post._id}`)
       .expect(200)
       .expect((res) => {
-        const post = res.body.post
+        expect(context.post._id).toEqual(res.body.post._id)
+        expect(context.post).not.toMatchObject(res.body.post)
       })
   })
 
-  it('Update post', async () => {
-    await request('http://localhost:8080')
-      .patch(`/posts/${postId}`)
-      .send({
-        title: 'Updated title',
-        description: 'Updated description',
-        date: Date.now(),
-      })
-      .expect(200)
-
-    const postAfterUpdate = await request('http://localhost:8080')
-      .get(`/posts/${postId}`)
-      .expect(200)
-    expect(post).not.toMatchObject(postAfterUpdate)
-  })
-
-  it('Delete post', async () => {
-    await request('http://localhost:8080').delete(`/posts/${postId}`).expect(200)
+  // list posts, check if contains updated post
+  it('list posts', async () => {
     await request('http://localhost:8080')
       .get('/posts/')
       .expect(200)
       .expect((res) => {
-        expect(res.body.posts.find((element) => element._id == postId)).toBeFalsy()
+        expect(res.body.posts[0]).toMatchObject(context.updatedPost)
+      })
+  })
+
+  // delete post
+  it('delete post', async () => {
+    await request('http://localhost:8080')
+      .delete(`/posts/${context.post._id}`)
+      .expect(200)
+
+    // should return 404, post was deleted
+    await request('http://localhost:8080').get(`/posts/${context.post._id}`).expect(404)
+
+    // should not contain post
+    await request('http://localhost:8080')
+      .get('/posts/')
+      .expect(200)
+      .expect((res) => {
+        expect(res.body.posts).toHaveLength(0)
       })
   })
 })

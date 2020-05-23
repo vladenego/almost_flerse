@@ -1,23 +1,18 @@
 import { Request, Response } from 'express'
 import { Db } from 'mongodb'
 import bcrypt from 'bcryptjs'
-import Joi from '@hapi/joi'
 import jwt from 'jsonwebtoken'
+import { TCredentials } from '~/types'
+import { authSchema } from '~/schemas'
 
 /** logs in user by email and password, returns auth token */
 export const loginHandler = (database: Db) => async (req: Request, res: Response) => {
-  const { email, password } = req.body
+  const { email, password } = req.body as TCredentials
 
   try {
-    // Validation requirements
-    const schema = Joi.object({
-      email: Joi.string().min(6).required().email(),
-      password: Joi.string().min(6).required(),
-    })
-
     // Validate email and password
     console.log('validating credentials')
-    const { error } = schema.validate(
+    const { error } = authSchema.validate(
       { email: email, password: password },
       { abortEarly: false },
     )
@@ -25,7 +20,8 @@ export const loginHandler = (database: Db) => async (req: Request, res: Response
       console.log(error.details)
 
       return res.status(400).json({
-        message: error.details,
+        message: 'bad credentials',
+        details: error.details,
       })
     }
 
@@ -63,9 +59,6 @@ export const loginHandler = (database: Db) => async (req: Request, res: Response
   } catch (error) {
     console.error('failed to log in user', error)
 
-    return res.status(500).json({
-      message: 'Internal Server Error',
-      error: error.message,
-    })
+    return res.status(500).json({})
   }
 }

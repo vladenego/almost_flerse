@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
-import { Db } from 'mongodb'
-import { ObjectId } from 'mongodb'
+import { Db, ObjectId } from 'mongodb'
 
 /** finds and returns a post by id */
 export const updatePostHandler = (database: Db) => async (
@@ -10,24 +9,28 @@ export const updatePostHandler = (database: Db) => async (
   const { postId } = req.params
 
   try {
-    const post = await database.collection('posts').findOneAndUpdate(
+    const { matchedCount } = await database.collection('posts').updateOne(
       { _id: new ObjectId(postId) },
       {
         $set: {
           title: req.body.title,
           description: req.body.description,
-          date: Date.now(),
         },
       },
     )
 
-    console.log(post)
+    if (matchedCount === 0) {
+      return res.status(404).json({
+        message: 'failed to find post',
+      })
+    }
 
     return res.status(200).json({
-      updatedPost: post,
+      message: 'successfully updated post',
     })
   } catch (error) {
-    console.error(error)
+    console.error('failed to update post', error)
+
     return res.status(500).send({})
   }
 }
