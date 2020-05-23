@@ -8,6 +8,7 @@ beforeAll(async () => {
 })
 
 let postId = ''
+let post = {}
 
 describe('Posts', () => {
   it('Create post', async () => {
@@ -26,13 +27,15 @@ describe('Posts', () => {
   })
 
   it('Get post', async () => {
-    await request('http://localhost:8080').get(`/posts/${postId}`).expect(200)
+    await request('http://localhost:8080')
+      .get(`/posts/${postId}`)
+      .expect(200)
+      .expect((res) => {
+        const post = res.body.post
+      })
   })
 
   it('Update post', async () => {
-    const postBeforeUpdate = await request('http://localhost:8080')
-      .get(`/posts/${postId}`)
-      .expect(200)
     await request('http://localhost:8080')
       .patch(`/posts/${postId}`)
       .send({
@@ -45,7 +48,7 @@ describe('Posts', () => {
     const postAfterUpdate = await request('http://localhost:8080')
       .get(`/posts/${postId}`)
       .expect(200)
-    expect(postBeforeUpdate).not.toMatchObject(postAfterUpdate)
+    expect(post).not.toMatchObject(postAfterUpdate)
   })
 
   it('Delete post', async () => {
