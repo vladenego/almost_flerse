@@ -25,11 +25,14 @@ describe('Posts', () => {
       })
   })
 
+  it('Get post', async () => {
+    await request('http://localhost:8080').get(`/posts/${postId}`).expect(200)
+  })
+
   it('Update post', async () => {
     const postBeforeUpdate = await request('http://localhost:8080')
       .get(`/posts/${postId}`)
       .expect(200)
-
     await request('http://localhost:8080')
       .patch(`/posts/${postId}`)
       .send({
