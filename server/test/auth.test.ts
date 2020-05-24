@@ -1,6 +1,6 @@
 import request from 'supertest'
-import { createDatabase } from '../src/database'
-const jwt = require('jsonwebtoken')
+import jwt from 'jsonwebtoken'
+import { createDatabase } from '~/database'
 
 // drop database and start server before each test run
 beforeAll(async () => {
@@ -19,7 +19,7 @@ describe('auth', () => {
         })
         .expect(400)
         .expect((res) => {
-          expect(res.body.message).toEqual('invalid credentials')
+          expect(res.body.message).toEqual('bad credentials')
         })
     })
 
@@ -45,7 +45,7 @@ describe('auth', () => {
         })
         .expect(400)
         .expect((res) => {
-          expect(res.body.message).toEqual('invalid credentials')
+          expect(res.body.message).toEqual('bad credentials')
         })
     })
 

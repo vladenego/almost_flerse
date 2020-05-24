@@ -8,6 +8,8 @@ import { registerHandler } from './handlers/auth/register'
 import { createPostHandler } from './handlers/posts/create-post'
 import { listPostsHandler } from './handlers/posts/list-posts'
 import { getPostHandler } from './handlers/posts/get-post'
+import { updatePostHandler } from './handlers/posts/update-post'
+import { deletePostHandler } from './handlers/posts/delete-post'
 
 /** creates a new express server */
 export const createServer = async () => {
@@ -32,9 +34,8 @@ export const createServer = async () => {
   server.post('/posts', createPostHandler(database))
   server.get('/posts', listPostsHandler(database))
   server.get('/posts/:postId', getPostHandler(database))
-  server.get('/hi', (req,res) => {
-    res.send('hi')
-  })
+  server.patch('/posts/:postId', updatePostHandler(database))
+  server.delete('/posts/:postId', deletePostHandler(database))
 
   return server
 }

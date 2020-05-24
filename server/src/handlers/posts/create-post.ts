@@ -6,14 +6,21 @@ export const createPostHandler = (database: Db) => async (
   req: Request,
   res: Response,
 ) => {
-  const { post } = req.body
+  try {
+    const { title, description } = req.body
 
-  // TODO:
-  // 1. create a new post for user
-  // 2. get created post id
-  // 3. return post id
+    const result = await database.collection('posts').insertOne({
+      title,
+      description,
+      date: Date.now(),
+    })
 
-  return res.status(404).json({
-    message: 'not implemented',
-  })
+    return res.status(200).json({
+      postID: result.insertedId,
+    })
+  } catch (error) {
+    console.error('failed to create post', error)
+
+    return res.status(500).send({})
+  }
 }
