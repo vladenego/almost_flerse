@@ -7,7 +7,7 @@ Web application written in JavaScript using React.
 ### Server
 Web server written in JavaScript running on Node.js.
 
-#### Scripts
+#### Script
 | Name                 | Descr                   |
 | -------------------- | ----------------------- |
 | `npm install`        | install dependencies    |
