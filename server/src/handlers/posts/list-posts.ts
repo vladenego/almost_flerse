@@ -4,7 +4,12 @@ import { Db } from 'mongodb'
 /** finds and returns a list of posts */
 export const listPostsHandler = (database: Db) => async (req: Request, res: Response) => {
   try {
-    const posts = await database.collection('posts').find().toArray()
+    const posts = await database
+      .collection('posts')
+      .find()
+      .skip(parseInt(req.query.skip as string))
+      .limit(parseInt(req.query.limit as string))
+      .toArray()
 
     return res.status(200).json({
       posts: posts,
