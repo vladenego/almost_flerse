@@ -1,13 +1,17 @@
 import jwt from 'jsonwebtoken'
+import { NextFunction, Request, Response } from 'express'
+import { Token } from '~/types'
 
-module.exports = async function authMiddleware(req, res, next) {
+export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   const token = req.header('auth-token')
 
-  if (!token || token === null) return res.status(401).send('Access denied')
+  if (!token || token === null) {
+    return res.status(401).send('Access denied')
+  }
 
   try {
-    const verified = jwt.verify(token, '1234')
-    req.user = verified
+    req.user = jwt.verify(token, '1234') as Token
+
     next()
   } catch (error) {
     console.log(error)

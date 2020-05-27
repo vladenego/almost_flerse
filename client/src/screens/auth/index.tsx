@@ -22,7 +22,7 @@ export const AuthScreen: FunctionComponent<AuthScreenProps> = ({ setAuthenticate
     })
       .then((res) => res.json())
       .then((res) => {
-        res.message ? setLoginError(res.message) : {}
+        if (res.message) setLoginError(res.message)
         // res.details[0].message != 'undefined' ? setLoginError(res.details[0].message) : {}
 
         if (res.token != '' && res.token != undefined) {

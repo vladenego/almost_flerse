@@ -1,4 +1,5 @@
 import { createServer } from './server'
+// import './global.d.ts'
 
 // create and start server
 createServer().then((server) => {
