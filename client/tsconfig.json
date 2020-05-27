@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "commonjs",
-    "lib": ["esnext"],
-    "types": ["@types/node", "@types/jest"],
+    "module": "esnext",
+    "lib": ["esnext", "DOM"],
+    "types": ["@types/node"],
+    "jsx": "react",
 
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
