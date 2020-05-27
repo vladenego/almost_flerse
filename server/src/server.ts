@@ -1,6 +1,7 @@
 import express from 'express'
 import morgan from 'morgan'
 import bodyParser from 'body-parser'
+import cors from 'cors'
 
 import { createDatabase } from './database'
 import { loginHandler } from './handlers/auth/login'
@@ -22,6 +23,7 @@ export const createServer = async () => {
 
   // set up middlewares
   console.log('setting up middlewares')
+  server.use(cors())
   server.use(morgan('tiny'))
   server.use(bodyParser.json({ limit: '4mb' }))
 
