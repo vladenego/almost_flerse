@@ -1,9 +1,13 @@
-import React, { FunctionComponent } from 'react'
+import React, { FunctionComponent, useState } from 'react'
 
-interface FeedScreenProps {}
+interface FeedScreenProps {
+  setToken: (token: boolean) => any
+}
 
-export const FeedScreen: FunctionComponent<FeedScreenProps> = () => (
-  <main id="feed-screen">
-    <h3>FEED</h3>
-  </main>
-)
+export const FeedScreen: FunctionComponent<FeedScreenProps> = () => {
+  return (
+    <main id="feed-screen">
+      <h3>FEED</h3>
+    </main>
+  )
+}

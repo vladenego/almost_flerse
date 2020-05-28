@@ -4,17 +4,17 @@ import { AuthScreen, FeedScreen } from '~/screens'
 import { Header } from '~/components'
 
 export const App: FunctionComponent = () => {
-  const [authenticated, setAuthenticated] = useState(false)
+  const [token, setToken] = useState(localStorage.getItem('token'))
 
   return (
     <BrowserRouter>
-      <Header authenticated={authenticated} setAuthenticated={setAuthenticated} />
+      <Header token={token} setToken={setToken} />
 
       {/* enable different screens depending on authentication state */}
-      {authenticated ? (
+      {token ? (
         <Switch>
           <Route path="/feed">
-            <FeedScreen />
+            <FeedScreen setToken={setToken} />
           </Route>
 
           {/* redirect to feed by default */}
@@ -23,7 +23,7 @@ export const App: FunctionComponent = () => {
       ) : (
         <Switch>
           <Route path="/auth">
-            <AuthScreen setAuthenticated={setAuthenticated} />
+            <AuthScreen setToken={setToken} />
           </Route>
 
           {/* redirect to auth by default */}

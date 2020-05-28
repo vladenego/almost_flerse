@@ -2,19 +2,16 @@ import React, { FunctionComponent } from 'react'
 import './styles.less'
 
 interface HeaderProps {
-  authenticated: boolean
-  setAuthenticated: (authenticated: boolean) => any
+  token: string
+  setToken: (token: string) => any
 }
 
-export const Header: FunctionComponent<HeaderProps> = ({
-  authenticated,
-  setAuthenticated,
-}) => (
+export const Header: FunctionComponent<HeaderProps> = ({ token, setToken }) => (
   <div id="header">
     <div className="title">FLERSE</div>
 
-    {authenticated && (
-      <div className="sign-out" onClick={() => setAuthenticated(false)}>
+    {token && (
+      <div className="sign-out" onClick={() => setToken('')}>
         SIGN OUT
       </div>
     )}

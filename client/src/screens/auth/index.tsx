@@ -2,13 +2,13 @@ import React, { FunctionComponent, useState } from 'react'
 import './styles.less'
 
 interface AuthScreenProps {
-  setAuthenticated: (authenticated: boolean) => any
+  setToken: (token: boolean) => any
 }
 
-export const AuthScreen: FunctionComponent<AuthScreenProps> = ({ setAuthenticated }) => {
-  const [email, setEmail] = useState<String>('')
-  const [password, setPassword] = useState<String>('')
-  const [loginError, setLoginError] = useState<String>('')
+export const AuthScreen: FunctionComponent<AuthScreenProps> = ({ setToken }) => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loginError, setLoginError] = useState('')
 
   const loginHandler = (event: React.FormEvent<EventTarget>) => {
     event.preventDefault()
@@ -18,30 +18,25 @@ export const AuthScreen: FunctionComponent<AuthScreenProps> = ({ setAuthenticate
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email: email, password: password }),
+      body: JSON.stringify({ email, password }),
     })
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.message) setLoginError(res.message)
-        // res.details[0].message != 'undefined' ? setLoginError(res.details[0].message) : {}
-
-        if (res.token != '' && res.token != undefined) {
-          localStorage.setItem('token', res.token)
-          setAuthenticated(true)
+      .then(async (res) => {
+        if (res.ok) {
+          return await res.json()
         }
+
+        throw await res.json()
+      })
+      .then((res) => {
+        setToken(res.token)
+
+        localStorage.setItem('token', res.token)
       })
       .catch((error) => {
-        console.error('There has been a problem with your fetch operation:', error)
+        setLoginError(error.message)
+
+        console.error('failed to log in', error)
       })
-  }
-
-  const emailHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value)
-  }
-
-  const passwordHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value)
-  }
 
   return (
     <main id="auth-screen">
@@ -50,14 +45,18 @@ export const AuthScreen: FunctionComponent<AuthScreenProps> = ({ setAuthenticate
       <form onSubmit={(event) => loginHandler(event)}>
         <label htmlFor="name">Email</label>
         <br />
-        <input type="email" name="email" onChange={(event) => emailHandler(event)} />
+        <input
+          type="email"
+          name="email"
+          onChange={(event) => setEmail(event.target.value)}
+        />
         <br />
         <label htmlFor="password">Password</label>
         <br />
         <input
           type="password"
           name="password"
-          onChange={(event) => passwordHandler(event)}
+          onChange={(event) => setPassword(event.target.value)}
         />
         <br />
         <input type="submit" className="submit" value="LOG IN" />
