@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState } from 'react'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
-import { LoginScreen, FeedScreen, RegisterScreen } from '~/screens'
+import { AuthScreen, FeedScreen } from '~/screens'
 import { Header } from '~/components'
 
 export const App: FunctionComponent = () => {
@@ -22,23 +22,14 @@ export const App: FunctionComponent = () => {
         </Switch>
       ) : (
         <Switch>
-          <Route path="/login">
-            <LoginScreen setToken={setToken} />
+          <Route path="/auth">
+            <AuthScreen setToken={setToken} />
           </Route>
 
           {/* redirect to auth by default */}
-          <Redirect from="/" to="/register" />
+          <Redirect from="/" to="/auth" />
         </Switch>
       )}
-
-      <Switch>
-        <Route path="/register">
-          <RegisterScreen setToken={setToken} />
-        </Route>
-
-        {/* redirect to auth by default */}
-        {/* <Redirect from="/" to="/register" /> */}
-      </Switch>
     </BrowserRouter>
   )
 }

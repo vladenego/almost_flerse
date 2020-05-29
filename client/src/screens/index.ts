@@ -1,3 +1,2 @@
-export { LoginScreen } from './login'
+export { AuthScreen } from './auth'
 export { FeedScreen } from './feed'
-export { RegisterScreen } from './register'

@@ -1,20 +1,21 @@
 import React, { FunctionComponent, useState } from 'react'
-import { Link } from 'react-router-dom'
+
 import './styles.less'
 
-interface LoginScreenProps {
+interface AuthScreenProps {
   setToken: (token: string) => any
 }
 
-export const LoginScreen: FunctionComponent<LoginScreenProps> = ({ setToken }) => {
+export const AuthScreen: FunctionComponent<AuthScreenProps> = ({ setToken }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loginError, setLoginError] = useState('')
+  const [mode, setMode] = useState<'login' | 'register'>('login')
 
   const loginHandler = (event: React.FormEvent<EventTarget>) => {
     event.preventDefault()
 
-    fetch('http://localhost:8080/auth/login/', {
+    fetch(`http://localhost:8080/auth/${mode}`, {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -41,7 +42,7 @@ export const LoginScreen: FunctionComponent<LoginScreenProps> = ({ setToken }) =
   }
   return (
     <main id="auth-screen">
-      <h3 className="title">LOGIN</h3>
+      <h3 className="title">{mode === 'login' ? 'Log in' : 'Register'}</h3>
       <p className="errorMessage">{loginError ? loginError : ''}</p>
       <form onSubmit={(event) => loginHandler(event)}>
         <label htmlFor="name">Email</label>
@@ -61,9 +62,21 @@ export const LoginScreen: FunctionComponent<LoginScreenProps> = ({ setToken }) =
         />
         <br />
         <p>
-          No account? <Link to="/register">Register</Link>
+          {mode === 'login' ? 'Have an account ' : "Don't have an account? "}
+          <a
+            id="have_account"
+            onClick={
+              mode === 'login' ? () => setMode('register') : () => setMode('login')
+            }
+          >
+            {mode === 'login' ? 'Register' : ' Log in'}
+          </a>
         </p>
-        <input type="submit" className="submit" value="LOG IN" />
+        <input
+          type="submit"
+          className="submit"
+          value={mode === 'login' ? 'Register' : 'Log in'}
+        />
       </form>
     </main>
   )

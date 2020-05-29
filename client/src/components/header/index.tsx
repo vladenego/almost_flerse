@@ -6,14 +6,20 @@ interface HeaderProps {
   setToken: (token: string) => any
 }
 
-export const Header: FunctionComponent<HeaderProps> = ({ token, setToken }) => (
-  <div id="header">
-    <div className="title">FLERSE</div>
+export const Header: FunctionComponent<HeaderProps> = ({ token, setToken }) => {
+  const signOutHandler = () => {
+    setToken('')
+    localStorage.removeItem('token')
+  }
+  return (
+    <div id="header">
+      <div className="title">FLERSE</div>
 
-    {token && (
-      <div className="sign-out" onClick={() => setToken('')}>
-        SIGN OUT
-      </div>
-    )}
-  </div>
-)
+      {token && (
+        <div className="sign-out" onClick={() => signOutHandler()}>
+          SIGN OUT
+        </div>
+      )}
+    </div>
+  )
+}
