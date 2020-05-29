@@ -1,11 +1,12 @@
 import React, { FunctionComponent, useState } from 'react'
+import { Link } from 'react-router-dom'
 import './styles.less'
 
-interface AuthScreenProps {
+interface LoginScreenProps {
   setToken: (token: string) => any
 }
 
-export const AuthScreen: FunctionComponent<AuthScreenProps> = ({ setToken }) => {
+export const LoginScreen: FunctionComponent<LoginScreenProps> = ({ setToken }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loginError, setLoginError] = useState('')
@@ -40,7 +41,7 @@ export const AuthScreen: FunctionComponent<AuthScreenProps> = ({ setToken }) => 
   }
   return (
     <main id="auth-screen">
-      <h3 className="title">AUTH</h3>
+      <h3 className="title">LOGIN</h3>
       <p className="errorMessage">{loginError ? loginError : ''}</p>
       <form onSubmit={(event) => loginHandler(event)}>
         <label htmlFor="name">Email</label>
@@ -59,6 +60,9 @@ export const AuthScreen: FunctionComponent<AuthScreenProps> = ({ setToken }) => 
           onChange={(event) => setPassword(event.target.value)}
         />
         <br />
+        <p>
+          No account? <Link to="/register">Register</Link>
+        </p>
         <input type="submit" className="submit" value="LOG IN" />
       </form>
     </main>
