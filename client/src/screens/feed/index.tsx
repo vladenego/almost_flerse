@@ -1,6 +1,5 @@
 import React, { FunctionComponent, useState, useEffect } from 'react'
 import { Post } from '~/components/post/index'
-import { log } from 'util'
 
 interface FeedScreenProps {
   token: string
@@ -21,6 +20,7 @@ export const FeedScreen: FunctionComponent<FeedScreenProps> = ({ token, setToken
 
         setPosts(res.posts)
       })
+      .catch((error) => console.log(error))
   }, [])
 
   return (

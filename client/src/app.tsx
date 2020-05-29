@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useState } from 'react'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import { AuthScreen, FeedScreen } from '~/screens'
-import { Header } from '~/components/header/index'
+import { Header } from '~/components'
 
 export const App: FunctionComponent = () => {
   const [token, setToken] = useState(localStorage.getItem('token'))
