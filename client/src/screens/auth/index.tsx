@@ -62,7 +62,7 @@ export const AuthScreen: FunctionComponent<AuthScreenProps> = ({ setToken }) => 
         />
         <br />
         <p>
-          {mode === 'login' ? 'Have an account ' : "Don't have an account? "}
+          {mode === 'login' ? "Don't have an account? " : 'Have an account? '}
           <a
             id="have_account"
             onClick={
@@ -75,7 +75,7 @@ export const AuthScreen: FunctionComponent<AuthScreenProps> = ({ setToken }) => 
         <input
           type="submit"
           className="submit"
-          value={mode === 'login' ? 'Register' : 'Log in'}
+          value={mode === 'login' ? 'Log in' : 'Register'}
         />
       </form>
     </main>
