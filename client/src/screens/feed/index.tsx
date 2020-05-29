@@ -1,13 +1,36 @@
-import React, { FunctionComponent, useState } from 'react'
+import React, { FunctionComponent, useState, useEffect } from 'react'
+import { Post } from '~/components/post/index'
+import { log } from 'util'
 
 interface FeedScreenProps {
-  setToken: (token: boolean) => any
+  token: string
+  setToken: (token: string) => any
 }
 
-export const FeedScreen: FunctionComponent<FeedScreenProps> = () => {
+export const FeedScreen: FunctionComponent<FeedScreenProps> = ({ token, setToken }) => {
+  const [posts, setPosts] = useState([])
+  useEffect(() => {
+    fetch('http://localhost:8080/posts', {
+      headers: {
+        'auth-token': token,
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res.posts)
+
+        setPosts(res.posts)
+      })
+  }, [])
+
   return (
     <main id="feed-screen">
       <h3>FEED</h3>
+      <div className="postList">
+        {posts.map((post) => (
+          <Post post={post} key={post._id} />
+        ))}
+      </div>
     </main>
   )
 }

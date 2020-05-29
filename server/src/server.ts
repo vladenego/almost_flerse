@@ -11,6 +11,7 @@ import { listPostsHandler } from './handlers/posts/list-posts'
 import { getPostHandler } from './handlers/posts/get-post'
 import { updatePostHandler } from './handlers/posts/update-post'
 import { deletePostHandler } from './handlers/posts/delete-post'
+import { authMiddleware } from './handlers/middlewares/authMiddleware'
 
 /** creates a new express server */
 export const createServer = async () => {
@@ -34,7 +35,7 @@ export const createServer = async () => {
   server.post('/auth/register', registerHandler(database))
   // posts
   server.post('/posts', createPostHandler(database))
-  server.get('/posts', listPostsHandler(database))
+  server.get('/posts', authMiddleware, listPostsHandler(database))
   server.get('/posts/:postId', getPostHandler(database))
   server.patch('/posts/:postId', updatePostHandler(database))
   server.delete('/posts/:postId', deletePostHandler(database))

@@ -2,7 +2,7 @@ import React, { FunctionComponent, useState } from 'react'
 import './styles.less'
 
 interface AuthScreenProps {
-  setToken: (token: boolean) => any
+  setToken: (token: string) => any
 }
 
 export const AuthScreen: FunctionComponent<AuthScreenProps> = ({ setToken }) => {
@@ -37,7 +37,7 @@ export const AuthScreen: FunctionComponent<AuthScreenProps> = ({ setToken }) => 
 
         console.error('failed to log in', error)
       })
-
+  }
   return (
     <main id="auth-screen">
       <h3 className="title">AUTH</h3>
