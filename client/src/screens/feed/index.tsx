@@ -1,5 +1,6 @@
 import React, { FunctionComponent, useState, useEffect } from 'react'
 import { Post } from '~/components/post/index'
+import './style.less'
 
 interface FeedScreenProps {
   token: string

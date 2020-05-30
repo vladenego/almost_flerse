@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState } from 'react'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
-import { AuthScreen, FeedScreen, PostScreen } from '~/screens'
+import { AuthScreen, FeedScreen, PostScreen, AddScreen } from '~/screens'
 import { Header } from '~/components'
 
 export const App: FunctionComponent = () => {
@@ -15,6 +15,10 @@ export const App: FunctionComponent = () => {
         <Switch>
           <Route exact path="/feed">
             <FeedScreen setToken={setToken} token={token} />
+          </Route>
+
+          <Route path="/feed/add">
+            <AddScreen setToken={setToken} token={token} />
           </Route>
 
           <Route path="/feed/:postId">
