@@ -8,7 +8,10 @@ interface postProps {
 
 export const Post: FunctionComponent<postProps> = ({ post }) => (
   <div className="post">
-    <h1>{post.title}</h1>
+    <a href={`http://localhost:1234/feed/${post._id}`}>
+      <h1>{post.title}</h1>
+    </a>
+
     <p>{post.description}</p>
   </div>
 )

@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState } from 'react'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
-import { AuthScreen, FeedScreen } from '~/screens'
+import { AuthScreen, FeedScreen, PostScreen } from '~/screens'
 import { Header } from '~/components'
 
 export const App: FunctionComponent = () => {
@@ -13,8 +13,12 @@ export const App: FunctionComponent = () => {
       {/* enable different screens depending on authentication state */}
       {token ? (
         <Switch>
-          <Route path="/feed">
+          <Route exact path="/feed">
             <FeedScreen setToken={setToken} token={token} />
+          </Route>
+
+          <Route path="/feed/:postId">
+            <PostScreen setToken={setToken} token={token} />
           </Route>
 
           {/* redirect to feed by default */}
