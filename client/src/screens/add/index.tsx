@@ -33,21 +33,34 @@ export const AddScreen: FunctionComponent<AddScreenProps> = ({ token, setToken }
       .catch((error) => console.log(error))
   }
 
-  // if (!post) return <div>Loading...</div>
-  console.log(title)
-  console.log(description)
+  const descriptionHandler = (event) => {
+    setDescription(event.target.value)
+    if (event.target.value.length >= 150) {
+      alert('you have reached a limit of 150')
+    }
+  }
 
   return (
     <main id="add-screen">
       <h1>Add Post</h1>
       <form onSubmit={(e) => onSubmit(e)}>
-        <input type="text" onChange={(e) => setTitle(e.target.value)} required />
+        <label htmlFor="title">Title</label>
+        <br />
+        <input
+          name="title"
+          type="text"
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
+        <br />
+        <label htmlFor="description">Description</label>
         <br />
         <textarea
-          name=""
+          name="description"
           id=""
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={(event) => descriptionHandler(event)}
           required
+          maxLength={150}
         ></textarea>
         <br />
         <input type="submit" />
