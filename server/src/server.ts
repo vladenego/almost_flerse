@@ -4,14 +4,16 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 
 import { createDatabase } from './database'
-import { loginHandler } from './handlers/auth/login'
-import { registerHandler } from './handlers/auth/register'
-import { createPostHandler } from './handlers/posts/create-post'
-import { listPostsHandler } from './handlers/posts/list-posts'
-import { getPostHandler } from './handlers/posts/get-post'
-import { updatePostHandler } from './handlers/posts/update-post'
-import { deletePostHandler } from './handlers/posts/delete-post'
-import { authMiddleware } from './handlers/middlewares/authMiddleware'
+import { authMiddleware } from './middlewares'
+import {
+  loginHandler,
+  registerHandler,
+  createPostHandler,
+  listPostsHandler,
+  getPostHandler,
+  updatePostHandler,
+  deletePostHandler,
+} from './handlers'
 
 /** creates a new express server */
 export const createServer = async () => {

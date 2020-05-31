@@ -12,9 +12,9 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
   try {
     req.user = jwt.verify(token, '1234') as Token
 
-    next()
+    return next()
   } catch (error) {
     console.log(error)
-    res.status(400).send('Invalid token')
+    return res.status(400).send('Invalid token')
   }
 }

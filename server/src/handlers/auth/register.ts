@@ -49,9 +49,7 @@ export const registerHandler = (database: Db) => async (req: Request, res: Respo
     const token = jwt.sign({ _id: insertedId }, '1234')
 
     console.log('sending response')
-    return res.status(200).json({
-      token: token,
-    })
+    return res.status(200).json({ token })
   } catch (error) {
     console.error('failed to register user', error)
 
