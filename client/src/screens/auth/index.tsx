@@ -7,7 +7,7 @@ interface AuthScreenProps {
 }
 
 export const AuthScreen: FunctionComponent<AuthScreenProps> = ({ setToken }) => {
-  const [email, setEmail] = useState('')
+  const [login, setLogin] = useState('')
   const [password, setPassword] = useState('')
   const [loginError, setLoginError] = useState('')
   const [mode, setMode] = useState<'login' | 'register'>('login')
@@ -20,7 +20,7 @@ export const AuthScreen: FunctionComponent<AuthScreenProps> = ({ setToken }) => 
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ login, password }),
     })
       .then(async (res) => {
         if (res.ok) {
@@ -45,12 +45,12 @@ export const AuthScreen: FunctionComponent<AuthScreenProps> = ({ setToken }) => 
       <h3 className="title">{mode === 'login' ? 'Log in' : 'Register'}</h3>
       <p className="errorMessage">{loginError ? loginError : ''}</p>
       <form onSubmit={(event) => loginHandler(event)}>
-        <label htmlFor="name">Email</label>
+        <label htmlFor="username">Username</label>
         <br />
         <input
-          type="email"
-          name="email"
-          onChange={(event) => setEmail(event.target.value)}
+          type="login"
+          name="login"
+          onChange={(event) => setLogin(event.target.value)}
         />
         <br />
         <label htmlFor="password">Password</label>

@@ -13,6 +13,7 @@ import {
   getPostHandler,
   updatePostHandler,
   deletePostHandler,
+  getUserHandler,
 } from './handlers'
 
 /** creates a new express server */
@@ -36,11 +37,14 @@ export const createServer = async () => {
   server.post('/auth/login', loginHandler(database))
   server.post('/auth/register', registerHandler(database))
   // posts
-  server.post('/posts', createPostHandler(database))
+  server.post('/posts', authMiddleware, createPostHandler(database))
   server.get('/posts', authMiddleware, listPostsHandler(database))
   server.get('/posts/:postId', getPostHandler(database))
   server.patch('/posts/:postId', updatePostHandler(database))
   server.delete('/posts/:postId', deletePostHandler(database))
+
+  //users
+  server.get('/users/:usernameOrId', authMiddleware, getUserHandler(database))
 
   return server
 }

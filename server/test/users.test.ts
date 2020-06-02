@@ -1,6 +1,7 @@
 import request from 'supertest'
-import jwt from 'jsonwebtoken'
 import { createDatabase } from '~/database'
+import jwt from 'jsonwebtoken'
+import { Token } from '~/types'
 
 // drop database and start server before each test run
 beforeAll(async () => {
@@ -8,8 +9,12 @@ beforeAll(async () => {
   await database.dropDatabase()
 })
 
-describe('auth', () => {
-  describe('register', () => {
+let username = 'tester3'
+let decodedToken: Token
+let token = ''
+
+describe('users', () => {
+  describe('registers user', () => {
     it('rejects empty credentials', async () => {
       await request('http://localhost:8080')
         .post('/auth/register')
@@ -27,41 +32,36 @@ describe('auth', () => {
     it('creates user', async () => {
       await request('http://localhost:8080')
         .post('/auth/register')
-        .send({
-          email: 'tester@example.com',
-          username: 'tester',
-          password: 'super-secret-password',
-        })
-        .expect(200)
-    })
-  })
 
-  // TODO
-  describe('login', () => {
-    it('rejects empty credentials', async () => {
-      await request('http://localhost:8080')
-        .post('/auth/login')
         .send({
-          email: '',
-          username: '',
-          password: '',
-        })
-        .expect(400)
-        .expect((res) => {
-          expect(res.body.message).toEqual('bad credentials')
-        })
-    })
-
-    it('logs in user and returns token', async () => {
-      await request('http://localhost:8080')
-        .post('/auth/login')
-        .send({
-          login: 'tester@example.com',
+          email: 'tester3@example.com',
+          username: 'tester3',
           password: 'super-secret-password',
         })
         .expect(200)
         .expect((res) => {
-          expect(jwt.decode(res.body.token)).toHaveProperty('_id')
+          token = res.body.token
+        })
+    })
+
+    it('get user by name', async () => {
+      await request('http://localhost:8080')
+        .get(`/users/${username}`)
+        .set({ 'auth-token': token })
+        .expect(200)
+        .expect((res) => expect(res.body.user.username).toEqual(username))
+    })
+
+    it('get user by  id', async () => {
+      decodedToken = jwt.decode(token) as Token
+
+      await request('http://localhost:8080')
+        .get(`/users/${decodedToken._id}`)
+        .set({ 'auth-token': token })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.user._id).toEqual(decodedToken._id)
+          expect(res.body.user.username).toEqual(username)
         })
     })
   })

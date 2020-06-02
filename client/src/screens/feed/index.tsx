@@ -29,7 +29,7 @@ export const FeedScreen: FunctionComponent<FeedScreenProps> = ({ token, setToken
       <h3>FEED</h3>
       <div className="postList">
         {posts.map((post) => (
-          <Post post={post} key={post._id} />
+          <Post post={post} key={post._id} token={token} setToken={setToken} />
         ))}
       </div>
     </main>
