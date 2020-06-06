@@ -1,5 +1,3 @@
-import { type } from 'os'
-
 export type TPost = {
   _id: string
   title: string

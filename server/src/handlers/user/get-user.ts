@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import { Db, ObjectId } from 'mongodb'
-import { log } from 'util'
 
 /** finds and returns a user by id */
 export const getUserHandler = (database: Db) => async (req: Request, res: Response) => {

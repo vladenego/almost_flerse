@@ -1,29 +1,29 @@
 import { Request, Response } from 'express'
 import { Db, ObjectId } from 'mongodb'
-import { log } from 'util'
-import { stringify } from 'querystring'
+import { TPost, TUser } from '~/types'
 
 /** finds and returns a list of posts */
 export const listPostsHandler = (database: Db) => async (req: Request, res: Response) => {
   try {
     const posts = await database
       .collection('posts')
-      .find()
+      .find<TPost>()
       .skip(parseInt(req.query.skip as string))
       .limit(parseInt(req.query.limit as string))
       .toArray()
 
-    const postsWithAuthorPromises = posts.map((post) =>
-      database
-        .collection('users')
-        .findOne({ _id: new ObjectId(post.userId) })
-        .then(({ username }) => ({ ...post, author: username })),
-    )
-
-    const postsWithAuthor = await Promise.all(postsWithAuthorPromises)
+    const users = await database
+      .collection('users')
+      .find<TUser>({
+        userId: {
+          $in: posts.map((post) => new ObjectId(post.userId)), // array of id strings
+        },
+      })
+      .toArray()
 
     return res.status(200).json({
-      posts: postsWithAuthor,
+      posts,
+      users,
     })
   } catch (error) {
     console.error('failed to list posts', error)

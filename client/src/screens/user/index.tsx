@@ -1,12 +1,11 @@
-import React, { FunctionComponent, useState, useEffect } from 'react'
+import React, { FunctionComponent, useState, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { TUser } from '~/types'
-import { TToken } from '~/types'
-import { UserPost } from '~/components/'
-import { getUserAndPosts } from './api'
-import './style.less'
-import { format } from 'url'
 import jwt from 'jsonwebtoken'
+
+import { UserPost } from '~/components'
+import { TUser, TToken } from '~/types'
+import { getUserAndPosts, deletePost } from './api'
+import './style.less'
 
 interface UserScreenProps {
   token: string
@@ -14,31 +13,29 @@ interface UserScreenProps {
 }
 
 export const UserScreen: FunctionComponent<UserScreenProps> = ({ token, setToken }) => {
-  const [user, setUser] = useState<TUser>()
-  const [posts, setPosts] = useState([])
-  const [userNotFound, setUserNotFound] = useState('')
-  const [admin, setAdmin] = useState(false)
   const { usernameOrId } = useParams()
+  const decodedToken = useMemo(() => jwt.decode(token) as TToken, [token])
+
+  const [user, setUser] = useState<TUser>(undefined)
+  const [posts, setPosts] = useState([])
 
   useEffect(() => {
-    getUserAndPosts(usernameOrId, token, setAdmin, setUser, setPosts)
+    getUserAndPosts(token, usernameOrId)
+      .then(([user, posts]) => {
+        setUser(user || null)
+        setPosts(posts)
+      })
+      .catch(console.error)
   }, [])
 
-  const onDeletePost = (postId) => {
-    fetch(`http://localhost:8080/posts/${postId}`, {
-      method: 'DELETE',
-      headers: {
-        'auth-token': token,
-      },
-    })
-      .then((res) => res.json()) // or res.json()
-      .then((res) => {
-        setPosts(posts.filter((post) => post._id != postId))
-      })
+  const onDeletePost = (postId: string) => {
+    setPosts(posts.filter((post) => post._id !== postId))
+
+    deletePost(token, postId).catch(console.error)
   }
 
-  if (userNotFound) return <div>User Not Found</div>
-  if (!user) return <div>Loading...</div>
+  if (user === null) return <div>User Not Found</div>
+  if (user === undefined) return <div>Loading...</div>
 
   return (
     <main id="user-screen">
@@ -54,10 +51,11 @@ export const UserScreen: FunctionComponent<UserScreenProps> = ({ token, setToken
         <hr />
         {posts.map((post) => (
           <UserPost
+            key={post._id}
             post={post}
             token={token}
             setToken={setToken}
-            admin={admin}
+            admin={decodedToken._id === user._id}
             onDeletePost={onDeletePost}
           />
         ))}

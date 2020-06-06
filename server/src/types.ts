@@ -13,7 +13,7 @@ export type TPost = {
   _id?: string
   title?: string
   description?: string
-  user_id?: string
+  userId?: string
   date?: number
 }
 
