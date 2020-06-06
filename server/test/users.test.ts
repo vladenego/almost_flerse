@@ -15,20 +15,6 @@ let token = ''
 
 describe('users', () => {
   describe('registers user', () => {
-    it('rejects empty credentials', async () => {
-      await request('http://localhost:8080')
-        .post('/auth/register')
-        .send({
-          email: '',
-          username: '',
-          password: '',
-        })
-        .expect(400)
-        .expect((res) => {
-          expect(res.body.message).toEqual('bad credentials')
-        })
-    })
-
     it('creates user', async () => {
       await request('http://localhost:8080')
         .post('/auth/register')

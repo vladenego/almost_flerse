@@ -1,8 +1,7 @@
-import React, { FunctionComponent, useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { FunctionComponent, useState } from 'react'
 import { TPost } from '~/types'
+import { sendPost } from './api'
 import './style.less'
-import { log } from 'util'
 
 interface AddScreenProps {
   token: string
@@ -10,31 +9,15 @@ interface AddScreenProps {
 }
 
 export const AddScreen: FunctionComponent<AddScreenProps> = ({ token, setToken }) => {
-  // const [post, setPost] = useState<TPost>()
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
+  const [post, setPost] = useState<TPost>()
+
   const onSubmit = (e) => {
     e.preventDefault()
-    fetch(`http://localhost:8080/posts`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'auth-token': token,
-      },
-      body: JSON.stringify({
-        title: title,
-        description: description,
-      }),
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res)
-      })
-      .catch((error) => console.log(error))
+    sendPost(post, token)
   }
 
-  const descriptionHandler = (event) => {
-    setDescription(event.target.value)
+  const onDescriptionChange = (event) => {
+    setPost({ ...post, description: event.target.value })
     if (event.target.value.length >= 150) {
       alert('you have reached a limit of 150')
     }
@@ -49,7 +32,7 @@ export const AddScreen: FunctionComponent<AddScreenProps> = ({ token, setToken }
         <input
           name="title"
           type="text"
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => setPost({ ...post, title: e.target.value })}
           required
         />
         <br />
@@ -58,7 +41,7 @@ export const AddScreen: FunctionComponent<AddScreenProps> = ({ token, setToken }
         <textarea
           name="description"
           id=""
-          onChange={(event) => descriptionHandler(event)}
+          onChange={(event) => onDescriptionChange(event)}
           required
           maxLength={150}
         ></textarea>

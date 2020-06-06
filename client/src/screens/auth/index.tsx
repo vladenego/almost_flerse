@@ -1,4 +1,5 @@
 import React, { FunctionComponent, useState } from 'react'
+import { authRequest } from './api'
 
 import './styles.less'
 
@@ -8,43 +9,32 @@ interface AuthScreenProps {
 
 export const AuthScreen: FunctionComponent<AuthScreenProps> = ({ setToken }) => {
   const [login, setLogin] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [loginError, setLoginError] = useState('')
+  const [error, setError] = useState('')
   const [mode, setMode] = useState<'login' | 'register'>('login')
 
   const loginHandler = (event: React.FormEvent<EventTarget>) => {
     event.preventDefault()
-
-    fetch(`http://localhost:8080/auth/${mode}`, {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ login, password }),
-    })
-      .then(async (res) => {
-        if (res.ok) {
-          return await res.json()
-        }
-
-        throw await res.json()
-      })
-      .then((res) => {
-        setToken(res.token)
-
-        localStorage.setItem('token', res.token)
-      })
-      .catch((error) => {
-        setLoginError(error.message)
-
-        console.error('failed to log in', error)
-      })
+    authRequest(mode, email, login, password, setToken, setError)
   }
   return (
     <main id="auth-screen">
       <h3 className="title">{mode === 'login' ? 'Log in' : 'Register'}</h3>
-      <p className="errorMessage">{loginError ? loginError : ''}</p>
+      <p className="errorMessage">{error ? error : ''}</p>
       <form onSubmit={(event) => loginHandler(event)}>
+        {mode === 'register' ? (
+          <div>
+            <label htmlFor="email">Email</label>
+            <br />
+            <input
+              type="email"
+              name="email"
+              onChange={(event) => setEmail(event.target.value)}
+            />
+            <br />
+          </div>
+        ) : null}
         <label htmlFor="username">Username</label>
         <br />
         <input

@@ -41,7 +41,7 @@ export const createServer = async () => {
   server.get('/posts', authMiddleware, listPostsHandler(database))
   server.get('/posts/:postId', getPostHandler(database))
   server.patch('/posts/:postId', updatePostHandler(database))
-  server.delete('/posts/:postId', deletePostHandler(database))
+  server.delete('/posts/:postId', authMiddleware, deletePostHandler(database))
 
   //users
   server.get('/users/:usernameOrId', authMiddleware, getUserHandler(database))

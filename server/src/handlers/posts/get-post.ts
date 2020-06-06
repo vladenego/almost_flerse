@@ -17,7 +17,12 @@ export const getPostHandler = (database: Db) => async (req: Request, res: Respon
       })
     }
 
-    return res.status(200).json({ post })
+    const postsWithAuthor = await database
+      .collection('users')
+      .findOne({ _id: new ObjectId(post.userId) })
+      .then(({ username }) => ({ ...post, author: username }))
+
+    return res.status(200).json({ post: postsWithAuthor })
   } catch (error) {
     console.error('failed to get post', error)
 

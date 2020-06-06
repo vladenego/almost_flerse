@@ -1,5 +1,7 @@
 import { Request, Response } from 'express'
-import { Db } from 'mongodb'
+import { Db, ObjectId } from 'mongodb'
+import { log } from 'util'
+import { stringify } from 'querystring'
 
 /** finds and returns a list of posts */
 export const listPostsHandler = (database: Db) => async (req: Request, res: Response) => {
@@ -11,8 +13,17 @@ export const listPostsHandler = (database: Db) => async (req: Request, res: Resp
       .limit(parseInt(req.query.limit as string))
       .toArray()
 
+    const postsWithAuthorPromises = posts.map((post) =>
+      database
+        .collection('users')
+        .findOne({ _id: new ObjectId(post.userId) })
+        .then(({ username }) => ({ ...post, author: username })),
+    )
+
+    const postsWithAuthor = await Promise.all(postsWithAuthorPromises)
+
     return res.status(200).json({
-      posts: posts,
+      posts: postsWithAuthor,
     })
   } catch (error) {
     console.error('failed to list posts', error)

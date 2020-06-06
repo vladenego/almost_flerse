@@ -1,12 +1,17 @@
 import React, { FunctionComponent, useState } from 'react'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
-import { AuthScreen, FeedScreen, PostScreen, AddScreen, UserScreen } from '~/screens'
+import {
+  AuthScreen,
+  FeedScreen,
+  PostsScreen,
+  AddScreen,
+  UserScreen,
+  UpdatePostScreen,
+} from '~/screens'
 import { Header } from '~/components'
 
 export const App: FunctionComponent = () => {
   const [token, setToken] = useState(localStorage.getItem('token'))
-
-  console.log(token)
 
   return (
     <BrowserRouter>
@@ -23,8 +28,12 @@ export const App: FunctionComponent = () => {
             <AddScreen setToken={setToken} token={token} />
           </Route>
 
+          <Route path="/feed/update/:postId">
+            <UpdatePostScreen setToken={setToken} token={token} />
+          </Route>
+
           <Route path="/feed/:postId">
-            <PostScreen setToken={setToken} token={token} />
+            <PostsScreen setToken={setToken} token={token} />
           </Route>
 
           <Route exact path="/u/:usernameOrId">
