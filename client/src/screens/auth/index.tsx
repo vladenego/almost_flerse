@@ -16,7 +16,24 @@ export const AuthScreen: FunctionComponent<AuthScreenProps> = ({ setToken }) => 
 
   const loginHandler = (event: React.FormEvent<EventTarget>) => {
     event.preventDefault()
-    authRequest(mode, email, login, password, setToken, setError)
+    authRequest(mode, email, login, password)
+      .then(async (res) => {
+        if (res.ok) {
+          return await res.json()
+        }
+
+        throw await res.json()
+      })
+      .then((res) => {
+        setToken(res.token)
+
+        localStorage.setItem('token', res.token)
+      })
+      .catch((error) => {
+        setError(error.message)
+
+        console.error('failed to log in', error)
+      })
   }
   return (
     <main id="auth-screen">

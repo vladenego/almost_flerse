@@ -12,7 +12,14 @@ export const FeedScreen: FunctionComponent<FeedScreenProps> = ({ token, setToken
   const [posts, setPosts] = useState([])
 
   useEffect(() => {
-    getPosts(token, setPosts)
+    getPosts(token)
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res.posts)
+
+        setPosts(res.posts)
+      })
+      .catch((error) => console.log(error))
   }, [])
 
   return (

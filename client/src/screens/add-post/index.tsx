@@ -14,6 +14,11 @@ export const AddScreen: FunctionComponent<AddScreenProps> = ({ token, setToken }
   const onSubmit = (e) => {
     e.preventDefault()
     sendPost(post, token)
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((error) => console.log(error))
   }
 
   const onDescriptionChange = (event) => {

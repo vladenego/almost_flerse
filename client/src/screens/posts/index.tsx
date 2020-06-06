@@ -14,7 +14,13 @@ export const PostsScreen: FunctionComponent<PostsScreenProps> = ({ token, setTok
   const { postId } = useParams()
 
   useEffect(() => {
-    getPost(postId, token, setPost)
+    getPost(postId, token)
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res)
+        setPost(res.post)
+      })
+      .catch((error) => console.log(error))
   }, [])
 
   if (!post) return <div>Loading...</div>

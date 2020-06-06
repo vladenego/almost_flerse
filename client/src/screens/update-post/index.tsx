@@ -18,12 +18,22 @@ export const UpdatePostScreen: FunctionComponent<UpdatePostScreenProps> = ({
   const { postId } = useParams()
 
   useEffect(() => {
-    getPost(postId, setPost, token)
+    getPost(postId, token)
+      .then((res) => res.json())
+      .then((res) => {
+        setPost(res.post)
+      })
+      .catch((error) => console.log(error))
   }, [])
 
   const onSubmit = (event) => {
     // event.preventDefault()
-    patchPost(postId, post, setPost, token)
+    patchPost(postId, post, token)
+      .then((res) => res.json())
+      .then((res) => {
+        setPost(res.post)
+      })
+      .catch((error) => console.log(error))
   }
 
   const onTitleChange = (event) => {
