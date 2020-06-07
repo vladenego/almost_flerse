@@ -1,15 +1,20 @@
 import express from 'express'
 import morgan from 'morgan'
 import bodyParser from 'body-parser'
+import cors from 'cors'
 
 import { createDatabase } from './database'
-import { loginHandler } from './handlers/auth/login'
-import { registerHandler } from './handlers/auth/register'
-import { createPostHandler } from './handlers/posts/create-post'
-import { listPostsHandler } from './handlers/posts/list-posts'
-import { getPostHandler } from './handlers/posts/get-post'
-import { updatePostHandler } from './handlers/posts/update-post'
-import { deletePostHandler } from './handlers/posts/delete-post'
+import { authMiddleware } from './middlewares'
+import {
+  loginHandler,
+  registerHandler,
+  createPostHandler,
+  listPostsHandler,
+  getPostHandler,
+  updatePostHandler,
+  deletePostHandler,
+  getUserHandler,
+} from './handlers'
 
 /** creates a new express server */
 export const createServer = async () => {
@@ -22,6 +27,7 @@ export const createServer = async () => {
 
   // set up middlewares
   console.log('setting up middlewares')
+  server.use(cors())
   server.use(morgan('tiny'))
   server.use(bodyParser.json({ limit: '4mb' }))
 
@@ -31,11 +37,13 @@ export const createServer = async () => {
   server.post('/auth/login', loginHandler(database))
   server.post('/auth/register', registerHandler(database))
   // posts
-  server.post('/posts', createPostHandler(database))
   server.get('/posts', listPostsHandler(database))
   server.get('/posts/:postId', getPostHandler(database))
-  server.patch('/posts/:postId', updatePostHandler(database))
-  server.delete('/posts/:postId', deletePostHandler(database))
+  server.post('/posts', authMiddleware, createPostHandler(database))
+  server.patch('/posts/:postId', authMiddleware, updatePostHandler(database))
+  server.delete('/posts/:postId', authMiddleware, deletePostHandler(database))
+  // users
+  server.get('/users/:usernameOrId', authMiddleware, getUserHandler(database))
 
   return server
 }

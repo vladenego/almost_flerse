@@ -8,3 +8,7 @@ body {
   font-family: 'DM Mono', monospace;
   font-weight: 300;
 }
+
+html {
+  box-sizing: border-box;
+}

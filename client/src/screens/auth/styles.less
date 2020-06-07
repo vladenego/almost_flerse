@@ -1,4 +1,9 @@
 #auth-screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
   & .title {
     margin-bottom: 15px;
   }
@@ -8,4 +13,31 @@
     color: whitesmoke;
     cursor: pointer;
   }
+
+  label {
+    margin-bottom: 10px;
+  }
+
+  input {
+    margin-bottom: 10px;
+    width: 300px;
+    padding: 10px 20px;
+    box-sizing: border-box;
+  }
+
+  input[type='submit'] {
+    width: 300px;
+  }
+
+  .errorMessage {
+    color: red;
+    width: 300px;
+  }
+
+  a {
+    color: #212121;
+    text-decoration: underline;
+  }
+
+
 }

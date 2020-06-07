@@ -15,6 +15,7 @@ describe('auth', () => {
         .post('/auth/register')
         .send({
           email: '',
+          username: '',
           password: '',
         })
         .expect(400)
@@ -28,6 +29,7 @@ describe('auth', () => {
         .post('/auth/register')
         .send({
           email: 'tester@example.com',
+          username: 'tester',
           password: 'super-secret-password',
         })
         .expect(200)
@@ -41,6 +43,7 @@ describe('auth', () => {
         .post('/auth/login')
         .send({
           email: '',
+          username: '',
           password: '',
         })
         .expect(400)
@@ -53,7 +56,7 @@ describe('auth', () => {
       await request('http://localhost:8080')
         .post('/auth/login')
         .send({
-          email: 'tester@example.com',
+          login: 'tester@example.com',
           password: 'super-secret-password',
         })
         .expect(200)

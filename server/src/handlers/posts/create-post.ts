@@ -12,6 +12,7 @@ export const createPostHandler = (database: Db) => async (
     const result = await database.collection('posts').insertOne({
       title,
       description,
+      userId: req.user._id,
       date: Date.now(),
     })
 
