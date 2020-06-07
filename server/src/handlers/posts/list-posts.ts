@@ -15,7 +15,7 @@ export const listPostsHandler = (database: Db) => async (req: Request, res: Resp
     const users = await database
       .collection('users')
       .find<TUser>({
-        userId: {
+        _id: {
           $in: posts.map((post) => new ObjectId(post.userId)), // array of id strings
         },
       })

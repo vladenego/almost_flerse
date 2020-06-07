@@ -5,16 +5,12 @@ import './styles.less'
 interface UserPostProps {
   admin: boolean
   post: TPost
-  token: string
-  setToken: (token: string) => any
-  onDeletePost: (userId: string) => any
+  onDeletePost: () => any
 }
 
 export const UserPost: FunctionComponent<UserPostProps> = ({
   post,
   admin,
-  token,
-  setToken,
   onDeletePost,
 }) => {
   const [deleteVisible, setDeleteVisible] = useState(false)
@@ -27,10 +23,6 @@ export const UserPost: FunctionComponent<UserPostProps> = ({
 
       <p>{post.description}</p>
 
-      <p>
-        <span>author: </span>
-        <a href={`http://localhost:1234/u/${post.author}`}>{post.author}</a>
-      </p>
       {admin ? (
         <div className="post-controller">
           {deleteVisible ? (
@@ -40,7 +32,7 @@ export const UserPost: FunctionComponent<UserPostProps> = ({
                 className="user-post-btn"
                 onClick={() => {
                   setDeleteVisible(false)
-                  onDeletePost(post._id)
+                  onDeletePost()
                 }}
               >
                 yes

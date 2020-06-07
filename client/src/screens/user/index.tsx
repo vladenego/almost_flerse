@@ -2,27 +2,25 @@ import React, { FunctionComponent, useState, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import jwt from 'jsonwebtoken'
 
-import { UserPost } from '~/components'
+import { UserPost, Post } from '~/components'
 import { TUser, TToken } from '~/types'
 import { getUserAndPosts, deletePost } from './api'
 import './style.less'
 
 interface UserScreenProps {
   token: string
-  setToken: (token: string) => any
+  user: TUser
 }
 
-export const UserScreen: FunctionComponent<UserScreenProps> = ({ token, setToken }) => {
+export const UserScreen: FunctionComponent<UserScreenProps> = ({ token, user }) => {
   const { usernameOrId } = useParams()
-  const decodedToken = useMemo(() => jwt.decode(token) as TToken, [token])
-
-  const [user, setUser] = useState<TUser>(undefined)
+  const [pageUser, setPageUser] = useState<TUser>(undefined)
   const [posts, setPosts] = useState([])
 
   useEffect(() => {
     getUserAndPosts(token, usernameOrId)
       .then(([user, posts]) => {
-        setUser(user || null)
+        setPageUser(user || null)
         setPosts(posts)
       })
       .catch(console.error)
@@ -53,10 +51,8 @@ export const UserScreen: FunctionComponent<UserScreenProps> = ({ token, setToken
           <UserPost
             key={post._id}
             post={post}
-            token={token}
-            setToken={setToken}
-            admin={decodedToken._id === user._id}
-            onDeletePost={onDeletePost}
+            admin={user._id === pageUser._id}
+            onDeletePost={() => onDeletePost(post._id)}
           />
         ))}
       </div>

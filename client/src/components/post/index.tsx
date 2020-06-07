@@ -1,14 +1,14 @@
 import React, { FunctionComponent, useEffect, useState } from 'react'
-import { TPost } from '~/types'
+import { TPost, TUser } from '~/types'
 import './styles.less'
+import { Link } from 'react-router-dom'
 
 interface PostProps {
   post: TPost
-  token: string
-  setToken: (token: string) => any
+  user: TUser
 }
 
-export const Post: FunctionComponent<PostProps> = ({ post, token, setToken }) => {
+export const Post: FunctionComponent<PostProps> = ({ post, user }) => {
   return (
     <div className="post">
       <a href={`http://localhost:1234/feed/${post._id}`}>
@@ -17,9 +17,10 @@ export const Post: FunctionComponent<PostProps> = ({ post, token, setToken }) =>
 
       <p>{post.description}</p>
       <hr />
+
       <p>
         <span>author: </span>
-        <a href={`http://localhost:1234/u/${post.author}`}>{post.author}</a>
+        <Link to={`/u/${user.username}`}>{user.username}</Link>
       </p>
     </div>
   )

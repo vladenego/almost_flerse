@@ -16,6 +16,7 @@ export const AuthScreen: FunctionComponent<AuthScreenProps> = ({ setToken }) => 
 
   const loginHandler = (event: React.FormEvent<EventTarget>) => {
     event.preventDefault()
+
     authRequest(mode, email, login, password)
       .then(async (res) => {
         if (res.ok) {
@@ -26,8 +27,6 @@ export const AuthScreen: FunctionComponent<AuthScreenProps> = ({ setToken }) => 
       })
       .then((res) => {
         setToken(res.token)
-
-        localStorage.setItem('token', res.token)
       })
       .catch((error) => {
         setError(error.message)

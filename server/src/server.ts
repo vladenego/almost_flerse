@@ -37,13 +37,12 @@ export const createServer = async () => {
   server.post('/auth/login', loginHandler(database))
   server.post('/auth/register', registerHandler(database))
   // posts
-  server.post('/posts', authMiddleware, createPostHandler(database))
-  server.get('/posts', authMiddleware, listPostsHandler(database))
+  server.get('/posts', listPostsHandler(database))
   server.get('/posts/:postId', getPostHandler(database))
+  server.post('/posts', authMiddleware, createPostHandler(database))
   server.patch('/posts/:postId', authMiddleware, updatePostHandler(database))
   server.delete('/posts/:postId', authMiddleware, deletePostHandler(database))
-
-  //users
+  // users
   server.get('/users/:usernameOrId', authMiddleware, getUserHandler(database))
 
   return server

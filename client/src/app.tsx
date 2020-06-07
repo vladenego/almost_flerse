@@ -1,5 +1,6 @@
-import React, { FunctionComponent, useState } from 'react'
+import React, { FunctionComponent, useState, useEffect } from 'react'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
+import jwt from 'jsonwebtoken'
 import {
   AuthScreen,
   FeedScreen,
@@ -9,9 +10,30 @@ import {
   UpdatePostScreen,
 } from '~/screens'
 import { Header } from '~/components'
+import { TUser, TToken } from './types'
 
 export const App: FunctionComponent = () => {
   const [token, setToken] = useState(localStorage.getItem('token'))
+  const [user, setUser] = useState<TUser>()
+
+  useEffect(() => {
+    localStorage.setItem('token', token)
+
+    if (token) {
+      const decodedToken = jwt.decode(token) as TToken
+
+      fetch(`http://localhost:8080/users/${decodedToken._id}`, {
+        headers: {
+          'auth-token': token,
+        },
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          setUser(res.user)
+        })
+        .catch(console.error)
+    }
+  }, [token])
 
   return (
     <BrowserRouter>
@@ -37,7 +59,7 @@ export const App: FunctionComponent = () => {
           </Route>
 
           <Route exact path="/u/:usernameOrId">
-            <UserScreen setToken={setToken} token={token} />
+            <UserScreen token={token} user={user} />
           </Route>
 
           {/* redirect to feed by default */}
