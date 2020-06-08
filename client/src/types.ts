@@ -5,6 +5,7 @@ export type TPost = {
   date: number
   userId: string
   author: string
+  content: string
 }
 
 export type TUser = {
