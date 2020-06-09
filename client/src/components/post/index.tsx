@@ -12,7 +12,7 @@ export const Post: FunctionComponent<PostProps> = ({ post, user }) => {
   return (
     <div className="post">
       <a href={`http://localhost:1234/feed/${post._id}`}>
-        <h1>{post.title}</h1>
+        <h2>{post.title}</h2>
       </a>
 
       <p>{post.description}</p>

@@ -37,7 +37,7 @@ export const App: FunctionComponent = () => {
 
   return (
     <BrowserRouter>
-      <Header token={token} setToken={setToken} />
+      <Header token={token} user={user} setToken={setToken} />
 
       {/* enable different screens depending on authentication state */}
       {token ? (

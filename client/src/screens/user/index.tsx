@@ -37,7 +37,7 @@ export const UserScreen: FunctionComponent<UserScreenProps> = ({ token, user }) 
 
   return (
     <main id="user-screen">
-      <h2>{user.username}</h2>
+      <h2 className="user-username">{user.username}</h2>
       <hr />
       <div className="user-header">
         <div className="user_title">email: {user.email}</div>
@@ -45,7 +45,7 @@ export const UserScreen: FunctionComponent<UserScreenProps> = ({ token, user }) 
       </div>
 
       <div className="user-postsList">
-        <h2>Posts</h2>
+        <h2 className="user-postsList-title">Posts</h2>
         <hr />
         {posts.map((post) => (
           <UserPost
