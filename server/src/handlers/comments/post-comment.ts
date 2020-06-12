@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { Db } from 'mongodb'
+import { Db, ObjectId } from 'mongodb'
 
 /** creates a new post, returns post id */
 export const postCommentHandler = (database: Db) => async (
@@ -8,12 +8,12 @@ export const postCommentHandler = (database: Db) => async (
 ) => {
   try {
     console.log(req.body)
-    const { postId, comment, username } = req.body
+    const { postId, comment, userId } = req.body
 
     const result = await database.collection('comments').insertOne({
       postId,
       comment,
-      username,
+      userId,
       date: Date.now(),
     })
 

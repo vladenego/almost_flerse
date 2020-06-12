@@ -14,8 +14,18 @@ export const getCommentsHandler = (database: Db) => async (
       .find({ postId: req.params.postId })
       .toArray()
 
+    const users = await database
+      .collection('users')
+      .find<TUser>({
+        _id: {
+          $in: comments.map((comment) => new ObjectId(comment.userId)), // array of id strings
+        },
+      })
+      .toArray()
+
     return res.status(200).json({
       comments,
+      users,
     })
   } catch (error) {
     console.error('failed to list comments', error)
