@@ -3,7 +3,7 @@ import ReactQuill from 'react-quill'
 import { TPost } from '~/types'
 import { sendPost } from './api'
 import './style.less'
-import '../../../node_modules/react-quill/dist/quill.snow.css'
+import 'react-quill/dist/quill.snow.css'
 import { format } from 'url'
 
 interface AddScreenProps {

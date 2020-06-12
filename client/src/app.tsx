@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import {
   AuthScreen,
   FeedScreen,
-  PostsScreen,
+  PostScreen,
   AddScreen,
   UserScreen,
   UpdatePostScreen,
@@ -55,7 +55,7 @@ export const App: FunctionComponent = () => {
           </Route>
 
           <Route path="/feed/:postId">
-            <PostsScreen setToken={setToken} token={token} user={user} />
+            <PostScreen setToken={setToken} token={token} user={user} />
           </Route>
 
           <Route exact path="/u/:usernameOrId">

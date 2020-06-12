@@ -4,21 +4,21 @@ import { TPost, TUser, TComment } from '~/types'
 import { getPost, getComments, sendComment } from './api'
 import './style.less'
 import dayjs from 'dayjs'
-import '../../../node_modules/react-quill/dist/quill.snow.css'
+import 'react-quill/dist/quill.snow.css'
 
-interface PostsScreenProps {
+interface PostScreenProps {
   user: TUser
   token: string
   setToken: (token: string) => any
 }
 
-export const PostsScreen: FunctionComponent<PostsScreenProps> = ({
+export const PostScreen: FunctionComponent<PostScreenProps> = ({
   user,
   token,
   setToken,
 }) => {
   const [post, setPost] = useState<TPost>()
-  const [userPost, setUserPost] = useState<TUser>()
+  const [postUser, setPostUser] = useState<TUser>()
   const [comments, setComments] = useState([])
   const [postComment, setPostComment] = useState<TComment>()
   const { postId } = useParams()
@@ -27,7 +27,7 @@ export const PostsScreen: FunctionComponent<PostsScreenProps> = ({
     getPost(postId, token)
       .then((res) => res.json())
       .then((res) => {
-        setUserPost(res.user)
+        setPostUser(res.user)
         setPost(res.post)
       })
       .catch((error) => console.log(error))
@@ -62,7 +62,7 @@ export const PostsScreen: FunctionComponent<PostsScreenProps> = ({
       })
   }
 
-  if (!post || !userPost) return <div>Loading...</div>
+  if (!post || !postUser) return <div>Loading...</div>
   console.log(comments)
   console.log(postComment)
 
@@ -75,7 +75,7 @@ export const PostsScreen: FunctionComponent<PostsScreenProps> = ({
         <hr />
         <p>
           <span>author: </span>
-          <a href={`http://localhost:1234/u/${userPost.username}`}>{userPost.username}</a>
+          <a href={`http://localhost:1234/u/${postUser.username}`}>{postUser.username}</a>
         </p>
       </div>
 
