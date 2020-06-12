@@ -2,24 +2,23 @@ import { Request, Response } from 'express'
 import { Db } from 'mongodb'
 
 /** creates a new post, returns post id */
-export const createPostHandler = (database: Db) => async (
+export const postCommentHandler = (database: Db) => async (
   req: Request,
   res: Response,
 ) => {
   try {
-    const { title, description, content, tag } = req.body
+    console.log(req.body)
+    const { postId, comment, username } = req.body
 
-    const result = await database.collection('posts').insertOne({
-      title,
-      description,
-      userId: req.user._id,
-      content,
-      tag,
+    const result = await database.collection('comments').insertOne({
+      postId,
+      comment,
+      username,
       date: Date.now(),
     })
 
     return res.status(200).json({
-      postID: result.insertedId,
+      commentId: result.insertedId,
     })
   } catch (error) {
     console.error('failed to create post', error)

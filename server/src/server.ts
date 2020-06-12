@@ -14,6 +14,8 @@ import {
   updatePostHandler,
   deletePostHandler,
   getUserHandler,
+  getCommentsHandler,
+  postCommentHandler,
 } from './handlers'
 
 /** creates a new express server */
@@ -44,6 +46,9 @@ export const createServer = async () => {
   server.delete('/posts/:postId', authMiddleware, deletePostHandler(database))
   // users
   server.get('/users/:usernameOrId', authMiddleware, getUserHandler(database))
+  // comments
+  server.get('/comments/:postId', authMiddleware, getCommentsHandler(database))
+  server.post('/comments/', authMiddleware, postCommentHandler(database))
 
   return server
 }

@@ -6,6 +6,7 @@ export type TPost = {
   userId: string
   author: string
   content: string
+  tag: string
 }
 
 export type TUser = {
@@ -17,4 +18,10 @@ export type TUser = {
 export type TToken = {
   _id: string
   iat: number
+}
+export type TComment = {
+  postId: string
+  username: string
+  comment: string
+  date: number
 }

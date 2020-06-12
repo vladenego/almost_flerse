@@ -1,13 +1,16 @@
 import { Request, Response } from 'express'
 import { Db, ObjectId } from 'mongodb'
 import { TPost, TUser } from '~/types'
+import { log } from 'util'
 
 /** finds and returns a list of posts */
 export const listPostsHandler = (database: Db) => async (req: Request, res: Response) => {
   try {
     const posts = await database
       .collection('posts')
-      .find<TPost>()
+      .find<TPost>(
+        req.query.tag == 'undefined' || req.query.tag == '' ? {} : { tag: req.query.tag },
+      )
       .skip(parseInt(req.query.skip as string))
       .limit(parseInt(req.query.limit as string))
       .toArray()

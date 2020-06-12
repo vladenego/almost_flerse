@@ -85,6 +85,23 @@ export const AddScreen: FunctionComponent<AddScreenProps> = ({ token, setToken }
           maxLength={150}
         ></textarea>
         <br />
+
+        <br />
+        <label htmlFor="description">Category</label>
+        <br />
+        <select
+          name="tag"
+          id=""
+          onChange={(e) => setPost({ ...post, tag: e.target.value })}
+        >
+          <option value="tech" selected>
+            tech
+          </option>
+          <option value="psychology">psychology</option>
+          <option value="sport">sport</option>
+          <option value="js">js</option>
+        </select>
+        <br />
         <br />
         <label htmlFor="description">Content</label>
         <br />

@@ -46,7 +46,7 @@ export const App: FunctionComponent = () => {
             <FeedScreen setToken={setToken} token={token} />
           </Route>
 
-          <Route path="/feed/add">
+          <Route exact path="/feed/add">
             <AddScreen setToken={setToken} token={token} />
           </Route>
 
@@ -55,7 +55,7 @@ export const App: FunctionComponent = () => {
           </Route>
 
           <Route path="/feed/:postId">
-            <PostsScreen setToken={setToken} token={token} />
+            <PostsScreen setToken={setToken} token={token} user={user} />
           </Route>
 
           <Route exact path="/u/:usernameOrId">
