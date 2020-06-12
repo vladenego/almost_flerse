@@ -28,7 +28,7 @@ export const sendComment = (
     },
     body: JSON.stringify({
       postId,
-      username: user.username,
+      userId: user._id,
       comment: postComment.comment,
     }),
   })

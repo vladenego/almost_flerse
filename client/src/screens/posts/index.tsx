@@ -3,8 +3,11 @@ import { useParams } from 'react-router-dom'
 import { TPost, TUser, TComment } from '~/types'
 import { getPost, getComments, sendComment } from './api'
 import './style.less'
-import dayjs from 'dayjs'
+
 import 'react-quill/dist/quill.snow.css'
+import { Comment } from '~/components/comment'
+import { CommentList } from '~/components/'
+import { AddComment } from '~/components/'
 
 interface PostScreenProps {
   user: TUser
@@ -20,7 +23,13 @@ export const PostScreen: FunctionComponent<PostScreenProps> = ({
   const [post, setPost] = useState<TPost>()
   const [postUser, setPostUser] = useState<TUser>()
   const [comments, setComments] = useState([])
+  const [users, setUsers] = useState([])
   const [postComment, setPostComment] = useState<TComment>()
+  const [commentsAndUsers, setCommentsAndUsers] = useState({
+    comments: [],
+    users: [],
+  })
+
   const { postId } = useParams()
 
   useEffect(() => {
@@ -35,7 +44,10 @@ export const PostScreen: FunctionComponent<PostScreenProps> = ({
     getComments(postId, token)
       .then((res) => res.json())
       .then((res) => {
-        setComments(res.comments)
+        setCommentsAndUsers({
+          comments: res.comments,
+          users: res.users,
+        })
       })
       .catch((error) => console.log(error))
   }, [])
@@ -50,12 +62,11 @@ export const PostScreen: FunctionComponent<PostScreenProps> = ({
     sendComment(postId, user, postComment, token)
       .then((res) => res.json())
       .then((res) => {
-        console.log(res)
         res.commentId
           ? getComments(postId, token)
               .then((res) => res.json())
               .then((res) => {
-                setComments(res.comments)
+                setCommentsAndUsers(res)
               })
               .catch((error) => console.log(error))
           : 'что-то пошло не так'
@@ -63,68 +74,46 @@ export const PostScreen: FunctionComponent<PostScreenProps> = ({
   }
 
   if (!post || !postUser) return <div>Loading...</div>
+
   console.log(comments)
-  console.log(postComment)
+  console.log(users)
+
+  if (comments == undefined || users == undefined) return <div>Loading...</div>
+  if (comments == null || users == null) return <div>Not found...</div>
 
   return (
     <main id="post-screen">
-      <div className="block-post">
-        <div className="post_title">{post.title}</div>
-        <hr />
-        <div className="ql-editor" dangerouslySetInnerHTML={{ __html: post.content }} />
-        <hr />
-        <p>
-          <span>author: </span>
-          <a href={`http://localhost:1234/u/${postUser.username}`}>{postUser.username}</a>
-        </p>
-      </div>
-
-      <div className="block-comments">
-        <h2 className="block-comments__title">Comments </h2>
-
-        {comments ? (
-          comments.map((comment) => (
-            <div className="comments-item" key={comment}>
-              <div className="comments-item-header">
-                <img className="comments-item__avatar" src="/img/tchami.jpg" alt="" />
-                <div>
-                  <p className="comments-item__username">{comment.username}</p>
-                  <p className="comments-item__date">
-                    {dayjs(comment.date).format('DD.MM.YYYY')}
-                  </p>
-                </div>
-              </div>
-              <div className="comments-item-header-main">
-                <p className="comments-item__text">{comment.comment}</p>
-              </div>
-            </div>
-          ))
-        ) : (
-          <div>loading...</div>
-        )}
-      </div>
-
-      <div className="block-comments">
-        <h2 className="block-comments__title">Discussion</h2>
-        <form
-          className="block-comments__form"
-          onSubmit={(event) => onSubmitComment(event, postId, token)}
-        >
-          <textarea
-            name=""
-            className="block-comments__textarea"
-            id=""
-            placeholder="text here..."
-            onChange={(event) =>
-              setPostComment({
-                ...postComment,
-                comment: event.target.value,
-              })
-            }
-          ></textarea>
-          <input className="block-comments__submit" type="submit" />
-        </form>
-      </div>
+      {comments && users ? (
+        <div>
+          <div className="block-post">
+            <div className="post_title">{post.title}</div>
+            <hr />
+            <div
+              className="ql-editor"
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
+            <hr />
+            <p>
+              <span>author: </span>
+              <a href={`http://localhost:1234/u/${postUser.username}`}>
+                {postUser.username}
+              </a>
+            </p>
+          </div>
+          <CommentList commentsAndUsers={commentsAndUsers} />
+          <AddComment
+            token={token}
+            user={user}
+            setToken={setToken}
+            onSubmitComment={onSubmitComment}
+            setPostComment={setPostComment}
+            postComment={postComment}
+            postId={postId}
+          />
+        </div>
+      ) : (
+        <div>Loading...</div>
+      )}
     </main>
   )
 }

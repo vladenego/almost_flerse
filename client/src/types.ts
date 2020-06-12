@@ -23,5 +23,6 @@ export type TComment = {
   postId: string
   username: string
   comment: string
+  userId: string
   date: number
 }
