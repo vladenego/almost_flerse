@@ -1,19 +1,20 @@
-import React, { FunctionComponent, useState, useEffect } from 'react'
+import React, { FunctionComponent, useState } from 'react'
 import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 import { TPost } from '~/types'
 import { sendPost } from './api'
 import './style.less'
-import '../../../node_modules/react-quill/dist/quill.snow.css'
-import { format } from 'url'
 
 interface AddScreenProps {
   token: string
-  setToken: (token: string) => any
 }
 
-export const AddScreen: FunctionComponent<AddScreenProps> = ({ token, setToken }) => {
-  const [value, setValue] = useState('')
-  const [post, setPost] = useState<TPost>()
+export const AddScreen: FunctionComponent<AddScreenProps> = ({ token }) => {
+  const [post, setPost] = useState<Partial<TPost>>({
+    title: '',
+    description: '',
+    content: '',
+  })
 
   const modules = {
     toolbar: [
@@ -45,7 +46,7 @@ export const AddScreen: FunctionComponent<AddScreenProps> = ({ token, setToken }
 
   const onSubmit = (e) => {
     e.preventDefault()
-    sendPost(post, value, token)
+    sendPost(post, token)
       .then((res) => res.json())
       .then((res) => {
         console.log(res)
@@ -93,10 +94,9 @@ export const AddScreen: FunctionComponent<AddScreenProps> = ({ token, setToken }
           name="tag"
           id=""
           onChange={(e) => setPost({ ...post, tag: e.target.value })}
+          defaultValue="tech"
         >
-          <option value="tech" selected>
-            tech
-          </option>
+          <option value="tech">tech</option>
           <option value="psychology">psychology</option>
           <option value="sport">sport</option>
           <option value="js">js</option>
@@ -111,8 +111,8 @@ export const AddScreen: FunctionComponent<AddScreenProps> = ({ token, setToken }
             theme="snow"
             modules={modules}
             formats={formats}
-            value={value}
-            onChange={setValue}
+            value={post.content}
+            onChange={(content) => setPost({ ...post, content })}
           />
         </div>
 

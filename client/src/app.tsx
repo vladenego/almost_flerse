@@ -47,7 +47,7 @@ export const App: FunctionComponent = () => {
           </Route>
 
           <Route exact path="/feed/add">
-            <AddScreen setToken={setToken} token={token} />
+            <AddScreen token={token} />
           </Route>
 
           <Route path="/feed/update/:postId">
