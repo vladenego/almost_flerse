@@ -1,6 +1,5 @@
 import React, { FunctionComponent, useState } from 'react'
 import { authRequest } from './api'
-
 import './styles.less'
 
 interface AuthScreenProps {

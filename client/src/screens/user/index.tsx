@@ -1,9 +1,7 @@
-import React, { FunctionComponent, useState, useEffect, useMemo } from 'react'
+import React, { FunctionComponent, useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import jwt from 'jsonwebtoken'
-
 import { UserPost, Post } from '~/components'
-import { TUser, TToken } from '~/types'
+import { TUser } from '~/types'
 import { getUserAndPosts, deletePost } from './api'
 import './style.less'
 

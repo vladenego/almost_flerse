@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react'
 import { Link } from 'react-router-dom'
-import './styles.less'
 import { TUser } from '~/types'
+import './styles.less'
 
 interface HeaderProps {
   token: string

@@ -1,5 +1,4 @@
 import React, { FunctionComponent } from 'react'
-import { Link } from 'react-router-dom'
 import './styles.less'
 import { TUser, TComment } from '~/types'
 

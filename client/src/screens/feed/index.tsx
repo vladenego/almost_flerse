@@ -1,10 +1,9 @@
 import React, { FunctionComponent, useState, useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import queryString from 'query-string'
 import { Post } from '~/components/post/index'
 import { getPosts } from './api'
 import './style.less'
-import { TPost, TUser } from '~/types'
-import queryString from 'query-string'
 
 interface FeedScreenProps {
   token: string

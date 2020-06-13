@@ -1,8 +1,8 @@
 import React, { FunctionComponent, useState } from 'react'
 import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
 import { TPost } from '~/types'
 import { sendPost } from './api'
+import 'react-quill/dist/quill.snow.css'
 import './style.less'
 
 interface AddScreenProps {

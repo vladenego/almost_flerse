@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { TPost, TUser } from '~/types'
 import './styles.less'
-import { Link } from 'react-router-dom'
 
 interface PostProps {
   post: TPost
