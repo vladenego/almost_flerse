@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import {
   AuthScreen,
   FeedScreen,
-  PostsScreen,
+  PostScreen,
   AddScreen,
   UserScreen,
   UpdatePostScreen,
@@ -37,7 +37,7 @@ export const App: FunctionComponent = () => {
 
   return (
     <BrowserRouter>
-      <Header token={token} setToken={setToken} />
+      <Header token={token} user={user} setToken={setToken} />
 
       {/* enable different screens depending on authentication state */}
       {token ? (
@@ -46,8 +46,8 @@ export const App: FunctionComponent = () => {
             <FeedScreen setToken={setToken} token={token} />
           </Route>
 
-          <Route path="/feed/add">
-            <AddScreen setToken={setToken} token={token} />
+          <Route exact path="/feed/add">
+            <AddScreen token={token} />
           </Route>
 
           <Route path="/feed/update/:postId">
@@ -55,7 +55,7 @@ export const App: FunctionComponent = () => {
           </Route>
 
           <Route path="/feed/:postId">
-            <PostsScreen setToken={setToken} token={token} />
+            <PostScreen setToken={setToken} token={token} user={user} />
           </Route>
 
           <Route exact path="/u/:usernameOrId">

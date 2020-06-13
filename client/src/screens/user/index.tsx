@@ -1,9 +1,7 @@
-import React, { FunctionComponent, useState, useEffect, useMemo } from 'react'
-import { useParams } from 'react-router-dom'
-import jwt from 'jsonwebtoken'
-
+import React, { FunctionComponent, useState, useEffect } from 'react'
+import { useParams, Link } from 'react-router-dom'
 import { UserPost, Post } from '~/components'
-import { TUser, TToken } from '~/types'
+import { TUser } from '~/types'
 import { getUserAndPosts, deletePost } from './api'
 import './style.less'
 
@@ -32,20 +30,23 @@ export const UserScreen: FunctionComponent<UserScreenProps> = ({ token, user }) 
     deletePost(token, postId).catch(console.error)
   }
 
-  if (user === null) return <div>User Not Found</div>
-  if (user === undefined) return <div>Loading...</div>
+  if (pageUser === null) return <div>User Not Found</div>
+  if (pageUser === undefined) return <div>Loading...</div>
 
   return (
     <main id="user-screen">
-      <h2>{user.username}</h2>
+      <h2 className="user-username">{pageUser.username}</h2>
       <hr />
       <div className="user-header">
-        <div className="user_title">email: {user.email}</div>
-        <div className="user_description">username: {user.username}</div>
+        <div className="user_title">email: {pageUser.email}</div>
+        <div className="user_description">username: {pageUser.username}</div>
+        <div className="user-addPost">
+          <Link to="/feed/add"> add post</Link>
+        </div>
       </div>
 
       <div className="user-postsList">
-        <h2>Posts</h2>
+        <h2 className="user-postsList-title">Posts</h2>
         <hr />
         {posts.map((post) => (
           <UserPost

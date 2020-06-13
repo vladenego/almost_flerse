@@ -14,7 +14,7 @@ export const getUserAndPosts = (
     .then((res) => res.user)
 
   // fetch posts and get promise
-  const postsPromise = fetch(`http://localhost:8080/posts`, {
+  const postsPromise = fetch(`http://localhost:8080/posts?tag=undefined`, {
     headers: {
       'auth-token': token,
     },

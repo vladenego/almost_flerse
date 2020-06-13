@@ -1,6 +1,6 @@
 export { AuthScreen } from './auth'
 export { FeedScreen } from './feed'
-export { PostsScreen } from './posts'
+export { PostScreen } from './posts'
 export { AddScreen } from './add-post'
 export { UpdatePostScreen } from './update-post'
 export { UserScreen } from './user'
